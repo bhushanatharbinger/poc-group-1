@@ -1,0 +1,13 @@
+{
+  "author": "kumar",
+  "scripts": {
+    "start": "sls offline",
+    "deploy": "sls deploy",
+    "deployPro": "sls deploy --stage production"
+  },
+  "devDependencies": {
+    "serverless": "^3.27.0",
+    "serverless-offline": "^12.0.4"
+  },
+  "dependencies": {}
+}

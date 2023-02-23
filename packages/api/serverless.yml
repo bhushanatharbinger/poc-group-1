@@ -1,0 +1,47 @@
+service: api
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+layers:
+  CommonDependenciesNodeModule:
+    path: common_layer
+    description: "common code"
+
+functions:
+  getUsers:
+    handler: handlers/getUsers.handler
+    events:
+      - httpApi:
+          path: /api/users
+          method: get
+    layers:
+      - {Ref: CommonDependenciesNodeModuleLambdaLayer}
+  getUserDetail:
+    handler: handlers/userDetail.handler
+    events:
+      - httpApi:
+          path: /api/user/{param}
+          method: get
+    layers:
+      - {Ref: CommonDependenciesNodeModuleLambdaLayer}
+  addUser:
+    handler: handlers/addUser.handler
+    events:
+      - httpApi:
+          path: /api/user
+          method: post
+    layers:
+      - {Ref: CommonDependenciesNodeModuleLambdaLayer}
+  editUser:
+    handler: handlers/editUser.handler
+    events:
+      - httpApi:
+          path: /api/user
+          method: put
+    layers:
+      - {Ref: CommonDependenciesNodeModuleLambdaLayer}
+plugins:
+  - serverless-offline
