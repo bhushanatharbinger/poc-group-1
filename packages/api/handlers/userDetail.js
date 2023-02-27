@@ -1,13 +1,13 @@
+const user = require("../common_layer/services/user");
+const { res_200, res_400 } = require("../common_layer/util/CustomResponse");
+
 module.exports.handler = async (event) => {
-    return {
-      statusCode: 200,
-      body: JSON.stringify(
-        {
-          message: "Go Serverless v3.0! UserDetail executed successfully!",
-        },
-        null,
-        2
-      ),
-    };
-  };
+    const userId = event.pathParameters.param;
+    if(!userId)
+    return res_400({
+      message:"Invalid request, User id is missing the request"
+    });
+    const userDetails = await user.getUserDetails(userId);
+    return res_200(userDetails);
+};
   

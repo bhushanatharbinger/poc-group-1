@@ -45,3 +45,4 @@ functions:
       - {Ref: CommonDependenciesNodeModuleLambdaLayer}
 plugins:
   - serverless-offline
+  - serverless-sequelize-migrations

@@ -1,13 +1,13 @@
+const { addUser } = require("../common_layer/services/user");
+const { res_201 } = require("../common_layer/util/CustomResponse");
+
 module.exports.handler = async (event) => {
-    return {
-      statusCode: 200,
-      body: JSON.stringify(
-        {
-          message: "Go Serverless v3.0! AddUser executed successfully!",
-        },
-        null,
-        2
-      ),
-    };
+    const body = event.body;
+    try{
+      const user = await addUser(body);
+      return res_201({user});
+    }catch(e){
+      console.log(e);
+    }
   };
   
