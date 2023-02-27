@@ -1,9 +1,12 @@
-import './App.css';
-import Landing from './component/Landing';
+import "./App.css";
+import Home from "./pages/Home";
 function App() {
   return (
     <div className="App">
-      <Landing />
+      <div className="App">
+      <Home />
+    </div>
+      
     </div>
   );
 }
