@@ -1,7 +1,7 @@
 const {handler} = require('../handlers/userDetail');
-	
+const {userId} = require('./data')
 test('Status 200', async () => {
-    const response = await handler({pathParameters:{param:1}});
+    const response = await handler({pathParameters:{param:userId}});
     expect(response.statusCode).toBe(200);
 });
 

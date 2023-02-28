@@ -2,7 +2,10 @@ const { addUser } = require("../common_layer/services/user");
 const { res_201, res_400 } = require("../common_layer/util/CustomResponse");
 
 module.exports.handler = async (event) => {
-  const body = JSON.parse(event.body);
+  if(!event?.body){
+    return res_400({ message: "Invalid Data!" })
+  }
+  const body = JSON.parse(event?.body);
   const basicInfo = body?.basicInfo;
   const academicInfo = body?.academicInfo;
   const employementInfo = body?.employementInfo;

@@ -49,6 +49,15 @@ functions:
           method: put
     layers:
       - {Ref: CommonDependenciesNodeModuleLambdaLayer}
+  deleteUser:
+    handler: handlers/deleteUser.handler
+    events:
+      - httpApi:
+          path: /api/user/{param}
+          method: delete
+    layers:
+      - {Ref: CommonDependenciesNodeModuleLambdaLayer}
+      
 plugins:
   - serverless-offline
   - serverless-sequelize-migrations
