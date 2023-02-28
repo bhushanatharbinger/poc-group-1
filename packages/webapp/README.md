@@ -11,6 +11,9 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
+
 ### `npm test`
 
 Launches the test runner in the interactive watch mode.\
@@ -21,57 +24,47 @@ See the section about [running tests](https://facebook.github.io/create-react-ap
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-# Guidelines for collaborators
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-## Directory Structure
-```
-└── /src 
-  ├── /assets 
-  ├── /components 
-  ├── /views 
-  ├── /services 
-  ├── /utils 
-  ├── /hooks 
-  ├── /store 
-  └── App.js 
-  ├── index.js 
-  ├── index.css
-```
-* Assets folder contains all of the project's static files, such as your logo, fonts, images, and favicons. 
-* Components folder contains a bit collection of UI codes such as buttons, forms, avatars, and so on. 
-* Pages folder contains all your React application's web pages. 
-* Services folder contains code that allows you to interact with external API resources. 
-* The utils folder contains reusable function snippets for performing quick tasks like text truncation or down casing. 
-* Hooks folder contains codes and logic that can be reused across multiple components. 
-* The store folder houses your state management files, such as Redux, which are used to make certain functions and variables available throughout your application. 
-* The main component of your React application is the App.js file. This file connects all components and views. 
-* Index.js file is the React application's entry point. It is responsible for bootstrapping the React library and mounting it on the root element. 
-* index.css is the main and global CSS file for our application. Any writing style to this file will apply throughout the project.  
+### `npm run eject`
 
-## Create Custom Hooks 
-To reduce duplications and complexities from your codebase, writing a custom hook that toggles the password's visibility is the right approach. Here's an example of a custom hook:  
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-Create a hook as described in the code snippet below: 
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-```
-└── /src 
-  ├── /hooks 
-      ├──useUser.js 
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-##  Separate business logic from UI 
-To improve the quality of your codes and make maintenance a lot easier, it is highly recommended that you separate logic from the UI components. The user interface structure of each page should be stored in the /pages  directory as React components and all logics should be in custom hooks and services.
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Best Practices 
-The following are some general guidelines for creating a scalable and optimized React application: 
+## Learn More
 
-1. Avoid using an excessive number of nested files and directories, and don't overthink on the application structure. 
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-2. Don't move files around; you can't afford to change file locations when a team of developers is working on the same project. 
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-3. Follow proper naming  conventions
+### Code Splitting
 
-4. Separate your features into separate reducers, with each one exporting its action creators and selectors, so that teams can work on them more effectively. 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-5. Use Redux-saga in your project to manage a large amount of asynchronous code and side effects.
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
