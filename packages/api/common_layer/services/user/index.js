@@ -8,7 +8,7 @@ const db = require('../../../models')
  * @returns list of array
  */
 user.getUsers = async function () {
-  const users = await db.user.findAll()
+  const users = await db.user.findAll({where:{deleted:false}})
   let _data = [];
   users.map((data) => {
     _data.push(data);
