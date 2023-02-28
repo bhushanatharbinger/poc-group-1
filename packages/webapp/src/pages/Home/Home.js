@@ -1,8 +1,16 @@
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom"
-import Button from "@mui/material/Button";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+// import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 // const columns = [
 //   { field: 'city' },
@@ -40,7 +48,6 @@ const Home = () => {
 
   return (
     <div>
-      <button onClick={()=>navigate("/adduser")}>Add</button>
       <h2>Landing Page</h2>
       <Box
         sx={{
@@ -76,7 +83,7 @@ const Home = () => {
           />}
         </div> */}
         <div className="home-page">
-          <table class="table">
+          {/* <table class="table">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">#</th>
@@ -99,7 +106,6 @@ const Home = () => {
                   >
                     View
                   </Button>
-                  {/* <Link class="btn btn-outline-primary mr-2" to={`./edituser/${user.id}`}>Edit</Link> */}
                   <Button
                     variant="contained"
                     color="primary"
@@ -117,7 +123,66 @@ const Home = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table> */}
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => navigate("/adduser")}
+          >
+            Add
+          </Button>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">Id</TableCell>
+                  <TableCell align="center">Name</TableCell>
+                  <TableCell align="center">User Name</TableCell>
+                  <TableCell align="center">Email Id</TableCell>
+                  <TableCell align="center">Action</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {users.map((row, index) => (
+                  <TableRow
+                    key={row.name}
+                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                  >
+                    <TableCell align="center">{index + 1}</TableCell>
+                    <TableCell align="center">{row.name}</TableCell>
+                    <TableCell align="center">{row.username}</TableCell>
+                    <TableCell align="center">{row.email}</TableCell>
+                    <TableCell align="center">
+                      <TableCell align="center">
+                        <Button
+                          variant="contained"
+                          onClick={() => navigate(`/user/${row.id}`)}
+                        >
+                          View
+                        </Button>
+                        &nbsp;&nbsp;
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={() => navigate(`/edituser/${row.id}`)}
+                        >
+                          Edit
+                        </Button>
+                        &nbsp;&nbsp;
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => deleteUser(row.id)}
+                        >
+                          Delete
+                        </Button>
+                      </TableCell>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       </Box>
     </div>
