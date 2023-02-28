@@ -118,4 +118,22 @@ user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
     id: userId,
   }
 }
+
+/**
+ * @description Method to updated user
+ * @param {*} body 
+ * @returns return user id updated user record
+ */
+user.deleteUser = async function (userId) {
+  const _user = await db.user.update({
+    deleted: true
+  }, { where: { id: userId } })  
+  if (_user?.[0] == 1) {
+    return {
+      id: userId
+    }
+  } else {
+    return null
+  }
+}
 module.exports = user;
