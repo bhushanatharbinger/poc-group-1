@@ -2,6 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import Button from "@mui/material/Button";
+import AppBar from '@mui/material/AppBar';
+import Typography from '@mui/material/Typography';
+import Toolbar from '@mui/material/Toolbar';
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
@@ -11,6 +14,10 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
+import PreviewIcon from '@mui/icons-material/Preview';
 
 // const columns = [
 //   { field: 'city' },
@@ -48,7 +55,21 @@ const Home = () => {
 
   return (
     <div>
-      <h2>Landing Page</h2>
+      <AppBar
+        position="absolute"
+        color="default"
+        elevation={0}
+        sx={{
+          position: 'relative',
+          borderBottom: (t) => `1px solid ${t.palette.divider}`,
+        }}
+      >
+        <Toolbar style={{width: "100%",justifyContent: 'center'}} align="center">
+          <Typography style={{width:"100%"}} align="center"  variant="h6" color="inherit" noWrap>
+            POC-GROUP-1
+          </Typography>
+        </Toolbar>
+      </AppBar>
       <Box
         sx={{
           mx: "auto",
@@ -70,67 +91,15 @@ const Home = () => {
           fontWeight: "700",
         }}
       >
-        {/* <div className="main" style={{ height: 400, width: "100%" }}>
-          {rows.length !== 0 && <DataGrid
-            rows={rows}
-            columns={columns}
-            getCellClassName={(params) => {
-              if (params.field === "city" || params.value == null) {
-                return "";
-              }
-              return params.value >= 15 ? "hot" : "cold";
-            }}
-          />}
-        </div> */}
         <div className="home-page">
-          {/* <table class="table">
-            <thead class="thead-dark">
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">User Name</th>
-                <th scope="col">Email Id</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user, index) => (
-                <tr>
-                  <th scope="row">{index + 1}</th>
-                  <td>{user.name}</td>
-                  <td>{user.username}</td>
-                  <td>{user.email}</td>
-                  <Button
-                    variant="contained"
-                    onClick={() => navigate(`/user/${user.id}`)}
-                  >
-                    View
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => navigate(`/edituser/${user.id}`)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => deleteUser(user.id)}
-                  >
-                    Delete
-                  </Button>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end',marginBottom:'10px' }}>
           <Button
             variant="contained"
-            color="secondary"
+            color="success"
             onClick={() => navigate("/adduser")}
-          >
-            Add
+          >Add
           </Button>
+          </Box>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -153,30 +122,29 @@ const Home = () => {
                     <TableCell align="center">{row.username}</TableCell>
                     <TableCell align="center">{row.email}</TableCell>
                     <TableCell align="center">
-                      <TableCell align="center">
-                        <Button
-                          variant="contained"
+                      <>
+                        <IconButton
+                          aria-label="view"
                           onClick={() => navigate(`/user/${row.id}`)}
                         >
-                          View
-                        </Button>
+                          <PreviewIcon></PreviewIcon>
+                        </IconButton>
                         &nbsp;&nbsp;
-                        <Button
-                          variant="contained"
-                          color="primary"
+                        <IconButton
+                          aria-label="edit"
                           onClick={() => navigate(`/edituser/${row.id}`)}
                         >
-                          Edit
-                        </Button>
+                          <AppRegistrationIcon/>
+                        </IconButton>
                         &nbsp;&nbsp;
-                        <Button
-                          variant="contained"
-                          color="secondary"
+                        <IconButton
+                          aria-label="delete"
+                          color="error"
                           onClick={() => deleteUser(row.id)}
                         >
-                          Delete
-                        </Button>
-                      </TableCell>
+                          <DeleteIcon/>
+                        </IconButton>
+                      </>
                     </TableCell>
                   </TableRow>
                 ))}

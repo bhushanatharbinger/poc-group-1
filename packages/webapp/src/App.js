@@ -14,7 +14,7 @@ function App() {
       {/* <Header /> */}
       {/* <Home message="My content"/> */}
       <Routes>
-        <Route path="/landing-page" element={<Home />} />
+        <Route path="/" element={<Home />} />
         <Route exact path="/adduser" element={<AddUser />} />
         <Route exact path="/edituser/:id" element={<EditUser />} />
         <Route exact path="/user/:id" element={<User />} />
