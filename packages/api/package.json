@@ -2,12 +2,14 @@
   "author": "kumar",
   "version": "1.0.0",
   "scripts": {
+    "test": "jest",
     "migrate": "sequelize-cli db:migrate",
     "start": "sls offline",
     "deploy": "sls deploy",
     "deployPro": "sls deploy --stage production"
   },
   "devDependencies": {
+    "jest": "^29.4.3",
     "sequelize-cli": "^6.6.0",
     "serverless": "^3.27.0",
     "serverless-offline": "^12.0.4",

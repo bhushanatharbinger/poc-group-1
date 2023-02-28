@@ -11,7 +11,7 @@ const db = require('../../../models')
 user.getUsers = async function () {
   const users = await db.user.findAll()
   let _data = [];
-  users.map((data) =>{
+  users.map((data) => {
     _data.push(data);
   })
   return _data;
@@ -23,31 +23,19 @@ user.getUsers = async function () {
  * @returns returns specific user details
  */
 user.getUserDetails = async function (userId) {
-  
-  return {
-    "userId": "12aa1f62-d565-4053-90eb-54ba08ee2df5",
-    "basicInfo": {
-      "id": "12aa1f62-d565-4053-90eb-54ba08ee2df5 ",
-      "firstName": "Wahid",
-      "lastName": "Ali",
-      "email": "wahid.ali@harbingergroup.com"
-    },
-    "academicInfo": [
-      {
-        "id": "12aa1f62-d565-4053-90eb-54ba08ee2df5 ",
-        "type": "MCA",
-        "institute": "Uttarakhand Technical University",
-        "passingYear": "2013"
-      }
-    ],
-    "employementInfo":
-      [{
-        "employeeCode": "1001",
-        "companyName": "Harbinger Group",
-        "designation": "Tech Lead"
-      }
-      ]
-  };
+  const basicInfo = await db.user.findByPk(userId)
+  const academicInfo = await db.academic.findOne({ where: { user_id: userId } })
+  const employementInfo = await db.employement.findOne({ where: { user_id: userId } })
+  if (basicInfo) {
+    return {
+      "userId": basicInfo?.id,
+      "basicInfo": basicInfo,
+      "academicInfo": academicInfo,
+      "employementInfo": employementInfo
+    };
+  } else {
+    return null;
+  }
 }
 
 /**
@@ -55,14 +43,32 @@ user.getUserDetails = async function (userId) {
  * @param {*} body | User information which is going to be created
  * @returns returns user id of newely created record
  */
-user.addUser = async function (body) {
+user.addUser = async function (basicInfo,academicInfo,employementInfo) {
+
   const user = await db.user.create({
-    firstName: body.firstName,
-    lastName: body.lastName,
-    email: body.email
+    firstName: basicInfo.firstName,
+    lastName: basicInfo.lastName,
+    email: basicInfo.email
+  })
+  const userId = user?.dataValues?.id
+  academicInfo.map(async _a=>{
+    await db.academic.create({
+      user_id:userId,
+      type:_a.type,
+      institute:_a.institute,
+      passingYear:_a.passingYear
+    })
+  })
+  employementInfo.map(async _e=>{
+    await db.employement.create({
+      user_id:userId,
+      employeeCode:_e.employeeCode,
+      companyName:_e.companyName,
+      designation:_e.designation
+    })
   })
   return {
-    id: user?.dataValues?.id,
+    id: userId
   }
 }
 
