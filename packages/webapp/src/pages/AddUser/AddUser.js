@@ -141,32 +141,12 @@ const AddUser = () => {
   });
   const submitAddData = async (e) => {
     dispatch(createUser(e));
-    //await axios.post("https://60decafeabbdd9001722d05c.mockapi.io/users", e);
     navigate("/");
   };
   const submitUpdateData = async (e) => {
     dispatch(updateUser(id, e));
-
-    // await axios.put(
-    //   `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`,
-    //   e
-    // );
     navigate("/");
   };
-  // const loadUser = async () => {
-  //   const result = await axios.get(
-  //     `http://localhost:3000/api/user/${id}`
-  //   );
-  //   formik.setFieldValue("firstName", result.data.firstName);
-  //   formik.setFieldValue("lastName", result.data.lastName);
-  //   formik.setFieldValue("email", result.data.email);
-  //   formik.setFieldValue("type", result.data.type);
-  //   formik.setFieldValue("institute", result.data.institute);
-  //   formik.setFieldValue("passingYear", result.data.passingYear);
-  //   formik.setFieldValue("employeeCode", result.data.employeeCode);
-  //   formik.setFieldValue("companyName", result.data.companyName);
-  //   formik.setFieldValue("designation", result.data.designation);
-  // };
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
