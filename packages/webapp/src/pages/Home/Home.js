@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 // import Button from "@mui/material/Button";
@@ -12,20 +12,41 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
+import TableFooter from '@mui/material/TableFooter';
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TablePagination from '@mui/material/TablePagination';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import PreviewIcon from '@mui/icons-material/Preview';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import {getAllUsers,deleteUser} from '../../actions/users'
 const Home = () => {
   //const [users, setUser] = useState([]);
+  const [page, setPage] = React.useState(0);
+  const [open,setOpen] = useState(false);
+  const [id,setId] = useState(0);
   const users = useSelector(state => state.users);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const removeUser = (id)=>{
+    setOpen(true)
+    setId(id);
+  }
+  const handleChangePage = (
+    event,
+    newPage
+  ) => {
+    setPage(newPage);
+  };
+  const agreeDelete =()=>{
     dispatch(deleteUser(id));
+    setOpen(false)
   }
   useEffect(() => {
     dispatch(getAllUsers());
@@ -141,10 +162,49 @@ const Home = () => {
                   </TableRow>
                 ))}
               </TableBody>
+              <TableFooter>
+          <TableRow>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+              colSpan={10}
+              count={users.length}
+              rowsPerPage={10}
+              page={page}
+              SelectProps={{
+                inputProps: {
+                  'aria-label': 'rows per page',
+                },
+                native: true,
+              }}
+              onPageChange={handleChangePage}
+            />
+          </TableRow>
+        </TableFooter>
             </Table>
           </TableContainer>
         </div>
       </Box>
+      <Dialog
+        open={open}
+        onClose={()=>{setOpen(false)}}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Delete User"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to delete this?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={()=>{setOpen(false)}}>Disagree</Button>
+          <Button onClick={agreeDelete} autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
