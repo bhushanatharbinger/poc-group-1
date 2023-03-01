@@ -66,7 +66,10 @@ user.addUser = async function (basicInfo, academicInfo, employementInfo) {
     })
   })
   return {
-    id: userId
+    id: userId,
+    firstName: basicInfo.firstName,
+    lastName: basicInfo.lastName,
+    email: basicInfo.email
   }
 }
 
@@ -116,6 +119,9 @@ user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
   })
   return {
     id: userId,
+    firstName: basicInfo.firstName,
+    lastName: basicInfo.lastName,
+    email: basicInfo.email
   }
 }
 
