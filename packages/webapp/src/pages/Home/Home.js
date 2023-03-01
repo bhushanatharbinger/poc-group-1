@@ -25,7 +25,8 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {getAllUsers,deleteUser} from '../../actions/users'
+import {getAllUsers,deleteUser} from '../../actions/users';
+// import styles from "./index.css";
 const Home = () => {
   //const [users, setUser] = useState([]);
   const [page, setPage] = React.useState(0);
@@ -127,7 +128,7 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users?.map((row, index) => (
+                {users.length !== 0 ? (users?.map((row, index) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -162,7 +163,7 @@ const Home = () => {
                       </>
                     </TableCell>
                   </TableRow>
-                ))}
+                ))) : <div style={{textAlign: 'center', marginTop: '18px'}} ><p>No Data Available</p></div>}
               </TableBody>
               <TableFooter>
           <TableRow>
