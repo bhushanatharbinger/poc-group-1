@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import { Field, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
-import {createUser,getUser,updateUser} from '../../actions/users'
+import { createUser, getUser, updateUser } from '../../actions/users'
 import {
   Tabs,
   Tab,
@@ -146,8 +146,8 @@ const AddUser = () => {
     navigate("/");
   };
   const submitUpdateData = async (e) => {
-    dispatch(updateUser(id,e));
-    
+    dispatch(updateUser(id, e));
+
     // await axios.put(
     //   `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`,
     //   e
@@ -175,9 +175,9 @@ const AddUser = () => {
     };
   }
   useEffect(() => {
-    if(id){
-      const user = users.find(_u=>_u.id == id);
-      console.log('user',user)
+    if (id) {
+      const user = users.find(_u => _u.id == id);
+      console.log('user', user)
       formik.setFieldValue("firstName", user?.basicInfo?.firstName);
       formik.setFieldValue("lastName", user?.basicInfo?.lastName);
       formik.setFieldValue("email", user?.basicInfo?.email);
@@ -190,8 +190,8 @@ const AddUser = () => {
     }
   }, [users]);
   useEffect(() => {
-    if(id){
-    dispatch(getUser(id));
+    if (id) {
+      dispatch(getUser(id));
     }
   }, []);
   return (
@@ -337,12 +337,22 @@ const AddUser = () => {
                       <Button
                         variant="contained"
                         onClick={() => {
-                          if(formik.isValid){
-                          setValue(1);       
-                          }                   
+                          formik.setTouched({
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                          })
+                          formik.validateForm().then((err) => {
+                            if (err.firstName || err.lastName || err.email) {
+                              return
+                            } else {
+                              setValue(1);
+                            }
+                          })
+
                         }}
                       >
-                       Next
+                        Next
                       </Button>
                     </div>
                   </Grid>
@@ -424,7 +434,7 @@ const AddUser = () => {
                           <TextField
                             {...field}
                             // disabled={formik.values.view ? true : false}
-                            placeholder="Enter Passing year" 
+                            placeholder="Enter Passing year"
                             fullWidth
                             size="small"
                             variant="outlined"
