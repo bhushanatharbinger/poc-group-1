@@ -32,7 +32,7 @@ import {
   
       case UPDATE_USER:
         return users.map((user) => {
-          if (user.id === payload.id) {
+          if (user.id == payload.id) {
             return {
               ...user,
               ...payload,

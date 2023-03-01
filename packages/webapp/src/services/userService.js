@@ -12,8 +12,8 @@ const create = data => {
   return http.post("/user", data);
 };
 
-const update = (id, data) => {
-  return http.put(`/user/${id}`, data);
+const update = (data) => {
+  return http.put(`/user`, data);
 };
 
 const remove = id => {

@@ -368,7 +368,6 @@ const AddUser = () => {
                           <InputLabel required>Education Type</InputLabel>
                           <TextField
                             {...field}
-                            value={field.name ? field.name : "none"}
                             select
                             size="small"
                             fullWidth
@@ -429,7 +428,8 @@ const AddUser = () => {
                             fullWidth
                             size="small"
                             variant="outlined"
-                            inputProps={{ maxLength: 4 }}
+                            type="number"
+                            inputProps={{ maxLength: 4, }}
                             {...{ error: meta.touched && meta.error }}
                             helperText={
                               meta.touched && meta.error && meta.error

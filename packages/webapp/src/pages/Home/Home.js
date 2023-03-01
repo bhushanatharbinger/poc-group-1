@@ -49,7 +49,9 @@ const Home = () => {
     setOpen(false)
   }
   useEffect(() => {
-    dispatch(getAllUsers());
+    if(!users || users.length === 0){
+      dispatch(getAllUsers());
+    }
   }, []);
 
   // const deleteUser = async (id) => {

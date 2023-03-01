@@ -13,10 +13,10 @@ import {
       const res = await UserDataService.create(data);
       dispatch({
         type: CREATE_USER,
-        payload: res.data,
+        payload: res.data?.user,
       });
   
-      return Promise.resolve(res.data);
+      return Promise.resolve(res.data?.user);
     } catch (err) {
       return Promise.reject(err);
     }
@@ -47,14 +47,16 @@ import {
 
   export const updateUser = (id, data) => async (dispatch) => {
     try {
-      const res = await UserDataService.update(id, data);
+      let _data = {...data}
+      _data.basicInfo.id = id
+      const res = await UserDataService.update(data);
   
       dispatch({
         type: UPDATE_USER,
-        payload: data,
+        payload: res.data?.user,
       });
   
-      return Promise.resolve(res.data);
+      return Promise.resolve(res.data?.user);
     } catch (err) {
       return Promise.reject(err);
     }
