@@ -49,7 +49,7 @@ const Home = () => {
     setOpen(false)
   }
   useEffect(() => {
-    if(!users || users.length === 0){
+    if(!users || users?.length === 0){
       dispatch(getAllUsers());
     }
   }, []);
@@ -169,7 +169,7 @@ const Home = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
               colSpan={10}
-              count={users.length}
+              count={users?.length || 0}
               rowsPerPage={10}
               page={page}
               SelectProps={{

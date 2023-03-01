@@ -2,7 +2,7 @@
   "author": "kumar",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest",
+    "test": "jest --silent",
     "migrate": "sequelize-cli db:migrate",
     "start": "sls offline",
     "deploy": "sls deploy",
