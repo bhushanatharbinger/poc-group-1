@@ -1,5 +1,5 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 // import Button from "@mui/material/Button";
 import AppBar from '@mui/material/AppBar';
@@ -18,40 +18,32 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 import PreviewIcon from '@mui/icons-material/Preview';
-
-// const columns = [
-//   { field: 'city' },
-//   { field: 'oct', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-//   { field: 'nov', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-//   { field: 'dec', type: 'number', valueFormatter: ({ value }) => `${value} °C` },
-// ];
-
-// const rows = [
-//   { id: 1, city: 'Amsterdam', oct: 7.1, nov: 4, dec: 10.2 },
-//   { id: 2, city: 'Barcelona', oct: 14.9, nov: 12.3, dec: 18.2 },
-//   { id: 3, city: 'Paris', oct: 8.1, nov: 5.4, dec: 12.3 },
-//   { id: 4, city: 'São Paulo', oct: 20.2, nov: 21.1, dec: 19.2 },
-// ];
+import {getAllUsers,deleteUser} from '../../actions/users'
 const Home = () => {
-  const [users, setUser] = useState([]);
+  //const [users, setUser] = useState([]);
+  const users = useSelector(state => state.users);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const removeUser = (id)=>{
+    dispatch(deleteUser(id));
+  }
   useEffect(() => {
-    loadUsers();
+    dispatch(getAllUsers());
   }, []);
 
-  const deleteUser = async (id) => {
-    await axios.delete(
-      `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`
-    );
-    loadUsers();
-  };
+  // const deleteUser = async (id) => {
+  //   await axios.delete(
+  //     `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`
+  //   );
+  //   loadUsers();
+  // };
 
-  const loadUsers = async () => {
-    const result = await axios.get(
-      `https://60decafeabbdd9001722d05c.mockapi.io/users`
-    );
-    setUser(result.data);
-  };
+  // const loadUsers = async () => {
+  //   const result = await axios.get(
+  //     `https://60decafeabbdd9001722d05c.mockapi.io/users`
+  //   );
+  //   setUser(result.data);
+  // };
 
   return (
     <div>
@@ -105,21 +97,21 @@ const Home = () => {
               <TableHead>
                 <TableRow>
                   <TableCell align="center">Id</TableCell>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">User Name</TableCell>
+                  <TableCell align="center">First Name</TableCell>
+                  <TableCell align="center">Last Name</TableCell>
                   <TableCell align="center">Email Id</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((row, index) => (
+                {users?.map((row, index) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{row.name}</TableCell>
-                    <TableCell align="center">{row.username}</TableCell>
+                    <TableCell align="center">{row.id}</TableCell>
+                    <TableCell align="center">{row.firstName}</TableCell>
+                    <TableCell align="center">{row.lastName}</TableCell>
                     <TableCell align="center">{row.email}</TableCell>
                     <TableCell align="center">
                       <>
@@ -140,7 +132,7 @@ const Home = () => {
                         <IconButton
                           aria-label="delete"
                           color="error"
-                          onClick={() => deleteUser(row.id)}
+                          onClick={() => removeUser(row.id)}
                         >
                           <DeleteIcon/>
                         </IconButton>
