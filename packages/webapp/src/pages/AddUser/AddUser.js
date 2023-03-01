@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { Field, FormikProvider, useFormik } from "formik";
 import * as Yup from "yup";
 import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import { Box, MenuItem } from "@mui/material";
-
+import {createUser,getUser,updateUser} from '../../actions/users'
 import {
+  Tabs,
+  Tab,
   Card,
   CardContent,
   Grid,
-  Input,
   InputLabel,
-  Paper,
   TextField,
   Typography,
+  AppBar,
+  Toolbar,
+  Box, MenuItem
 } from "@mui/material";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -45,6 +46,8 @@ TabPanel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 const AddUser = () => {
+  const dispatch = useDispatch();
+  const users = useSelector(state => state.users);
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
     { id: "none", name: "Select Education Type" },
@@ -83,28 +86,28 @@ const AddUser = () => {
         .required("Last Name is Required"),
       email: Yup.string()
         .email("Invalid email format")
-        .required("Email is Required"),
-      type: yupSelectNoneValidation('Education is Required'),
-      institute: Yup.string()
-      .min(4, "Must be 4 charecters or more")
-      .max(20, "Must be 20 characters or less")
-      .required("School/College/University is Required"),
-      passingYear: Yup.string()
-      .min(4, "Must be 4 charecters or more")
-      .max(20, "Must be 20 characters or less")
-      .required("Passing Year is Required"),
-      employeeCode: Yup.string()
-      .min(4, "Must be 4 charecters or more")
-      .max(20, "Must be 20 characters or less")
-      .required("Employee Code is Required"),
-      companyName: Yup.string()
-      .min(4, "Must be 4 charecters or more")
-      .max(20, "Must be 20 characters or less")
-      .required("Company Name is Required"),
-      designation: Yup.string()
-      .min(4, "Must be 4 charecters or more")
-      .max(20, "Must be 20 characters or less")
-      .required("Designation is Required"),
+        .required("Email is Required")
+      // type: yupSelectNoneValidation('Education is Required'),
+      // institute: Yup.string()
+      //   .min(4, "Must be 4 charecters or more")
+      //   .max(20, "Must be 20 characters or less")
+      //   .required("School/College/University is Required"),
+      // passingYear: Yup.string()
+      //   .min(4, "Must be 4 charecters or more")
+      //   .max(20, "Must be 20 characters or less")
+      //   .required("Passing Year is Required"),
+      // employeeCode: Yup.string()
+      //   .min(4, "Must be 4 charecters or more")
+      //   .max(20, "Must be 20 characters or less")
+      //   .required("Employee Code is Required"),
+      // companyName: Yup.string()
+      //   .min(4, "Must be 4 charecters or more")
+      //   .max(20, "Must be 20 characters or less")
+      //   .required("Company Name is Required"),
+      // designation: Yup.string()
+      //   .min(4, "Must be 4 charecters or more")
+      //   .max(20, "Must be 20 characters or less")
+      //   .required("Designation is Required"),
 
     }),
     onSubmit: (values) => {
@@ -119,7 +122,7 @@ const AddUser = () => {
         academicInfo: [
           {
             type: values.type ? values.type : values.type,
-            institute: values.institute? values.institute : null,
+            institute: values.institute ? values.institute : null,
             passingYear: values.passingYear ? values.passingYear : null,
           },
         ],
@@ -138,31 +141,33 @@ const AddUser = () => {
     },
   });
   const submitAddData = async (e) => {
-    // e.preventDefault();
-    await axios.post("https://60decafeabbdd9001722d05c.mockapi.io/users", e);
-    navigate("/landing-page");
+    dispatch(createUser(e));
+    //await axios.post("https://60decafeabbdd9001722d05c.mockapi.io/users", e);
+    navigate("/");
   };
   const submitUpdateData = async (e) => {
-    await axios.put(
-      `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`,
-      e
-    );
-    navigate("/landing-page");
+    dispatch(updateUser(id,e));
+    
+    // await axios.put(
+    //   `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`,
+    //   e
+    // );
+    navigate("/");
   };
-  const loadUser = async () => {
-    const result = await axios.get(
-      `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`
-    );
-    formik.setFieldValue("firstName", result.data.firstName);
-    formik.setFieldValue("lastName", result.data.lastName);
-    formik.setFieldValue("email", result.data.email);
-    formik.setFieldValue("type", result.data.type);
-    formik.setFieldValue("institute", result.data.institute);
-    formik.setFieldValue("passingYear", result.data.passingYear);
-    formik.setFieldValue("employeeCode", result.data.employeeCode);
-    formik.setFieldValue("companyName", result.data.companyName);
-    formik.setFieldValue("designation", result.data.designation);
-  };
+  // const loadUser = async () => {
+  //   const result = await axios.get(
+  //     `http://localhost:3000/api/user/${id}`
+  //   );
+  //   formik.setFieldValue("firstName", result.data.firstName);
+  //   formik.setFieldValue("lastName", result.data.lastName);
+  //   formik.setFieldValue("email", result.data.email);
+  //   formik.setFieldValue("type", result.data.type);
+  //   formik.setFieldValue("institute", result.data.institute);
+  //   formik.setFieldValue("passingYear", result.data.passingYear);
+  //   formik.setFieldValue("employeeCode", result.data.employeeCode);
+  //   formik.setFieldValue("companyName", result.data.companyName);
+  //   formik.setFieldValue("designation", result.data.designation);
+  // };
   function a11yProps(index) {
     return {
       id: `simple-tab-${index}`,
@@ -170,11 +175,63 @@ const AddUser = () => {
     };
   }
   useEffect(() => {
-    loadUser();
+    if(id){
+      const user = users.find(_u=>_u.id == id);
+      console.log('user',user)
+      formik.setFieldValue("firstName", user?.basicInfo?.firstName);
+      formik.setFieldValue("lastName", user?.basicInfo?.lastName);
+      formik.setFieldValue("email", user?.basicInfo?.email);
+      formik.setFieldValue("type", user?.academicInfo?.[0].type);
+      formik.setFieldValue("institute", user?.academicInfo?.[0].institute);
+      formik.setFieldValue("passingYear", user?.academicInfo?.[0].passingYear);
+      formik.setFieldValue("employeeCode", user?.employementInfo?.[0].employeeCode);
+      formik.setFieldValue("companyName", user?.employementInfo?.[0].companyName);
+      formik.setFieldValue("designation", user?.employementInfo?.[0].designation);
+    }
+  }, [users]);
+  useEffect(() => {
+    if(id){
+    dispatch(getUser(id));
+    }
   }, []);
   return (
-    <>
-      <Box sx={{ width: "100%" }}>
+    <div>
+      <AppBar
+        position="absolute"
+        color="default"
+        elevation={0}
+        sx={{
+          position: 'relative',
+          borderBottom: (t) => `1px solid ${t.palette.divider}`,
+        }}
+      >
+        <Toolbar style={{ width: "100%", justifyContent: 'center' }} align="center">
+          <Typography style={{ width: "100%" }} align="center" variant="h6" color="inherit" noWrap>
+            POC-GROUP-1
+          </Typography>
+        </Toolbar>
+      </AppBar>
+      <Box
+        sx={{
+          mx: "auto",
+          width: 1000,
+          p: 1,
+          // m: 1,
+          mt: 5,
+          ml: 17,
+          bgcolor: (theme) =>
+            theme.palette.mode === "dark" ? "#101010" : "grey.50",
+          color: (theme) =>
+            theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+          border: "1px solid",
+          borderColor: (theme) =>
+            theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+          borderRadius: 2,
+          textAlign: "center",
+          fontSize: "0.875rem",
+          fontWeight: "700",
+        }}
+      >
         <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
           <Tabs
             value={value}
@@ -278,13 +335,14 @@ const AddUser = () => {
                   <Grid item xs={3}>
                     <div className={`col-2`}>
                       <Button
-                        variant="outlined"
-                        sx={{ color: "blue" }}
+                        variant="contained"
                         onClick={() => {
-                          formik.handleSubmit();
+                          if(formik.isValid){
+                          setValue(1);       
+                          }                   
                         }}
                       >
-                        {id ? "Update" : "Save"}
+                       Next
                       </Button>
                     </div>
                   </Grid>
@@ -313,7 +371,6 @@ const AddUser = () => {
                             value={field.name ? field.name : "none"}
                             select
                             size="small"
-                            required
                             fullWidth
                             inputProps={{ maxLength: 50 }}
                             {...{ error: meta.touched && meta.error }}
@@ -337,14 +394,13 @@ const AddUser = () => {
                     <Field name="institute">
                       {({ field, meta }) => (
                         <div>
-                          <InputLabel required>
+                          <InputLabel >
                             School/College/University{" "}
                           </InputLabel>
                           <TextField
                             {...field}
                             // disabled={formik.values.view ? true : false}
                             placeholder="Enter School/College/University"
-                            required
                             fullWidth
                             size="small"
                             variant="outlined"
@@ -365,12 +421,11 @@ const AddUser = () => {
                     <Field name="passingYear">
                       {({ field, meta }) => (
                         <div>
-                          <InputLabel required>Passing year</InputLabel>
+                          <InputLabel>Passing year</InputLabel>
                           <TextField
                             {...field}
                             // disabled={formik.values.view ? true : false}
-                            placeholder="Enter Passing year"
-                            required
+                            placeholder="Enter Passing year" 
                             fullWidth
                             size="small"
                             variant="outlined"
@@ -392,13 +447,12 @@ const AddUser = () => {
                   <Grid item xs={3}>
                     <div className={`col-2`}>
                       <Button
-                        variant="outlined"
-                        sx={{ color: "blue" }}
+                        variant="contained"
                         onClick={() => {
-                          formik.handleSubmit();
+                          setValue(2);
                         }}
                       >
-                        {id ? "Update" : "Save"}
+                        Next
                       </Button>
                     </div>
                   </Grid>
@@ -421,12 +475,11 @@ const AddUser = () => {
                     <Field name="employeeCode">
                       {({ field, meta }) => (
                         <div>
-                          <InputLabel required>Employee Code</InputLabel>
+                          <InputLabel>Employee Code</InputLabel>
                           <TextField
                             {...field}
                             // disabled={formik.values.view ? true : false}
                             placeholder="Enter Employee Cpde"
-                            required
                             fullWidth
                             size="small"
                             variant="outlined"
@@ -446,12 +499,11 @@ const AddUser = () => {
                     <Field name="companyName">
                       {({ field, meta }) => (
                         <div>
-                          <InputLabel required>Company Name</InputLabel>
+                          <InputLabel>Company Name</InputLabel>
                           <TextField
                             {...field}
                             // disabled={formik.values.view ? true : false}
                             placeholder="Enter Company Name"
-                            required
                             fullWidth
                             size="small"
                             variant="outlined"
@@ -472,12 +524,11 @@ const AddUser = () => {
                     <Field name="designation">
                       {({ field, meta }) => (
                         <div>
-                          <InputLabel required>Designation</InputLabel>
+                          <InputLabel>Designation</InputLabel>
                           <TextField
                             {...field}
                             // disabled={formik.values.view ? true : false}
                             placeholder="Enter Designation"
-                            required
                             variant="outlined"
                             size="small"
                             fullWidth
@@ -499,8 +550,8 @@ const AddUser = () => {
                   <Grid item xs={3}>
                     <div className={`col-2`}>
                       <Button
-                        variant="outlined"
-                        sx={{ color: "blue" }}
+                        variant="contained"
+                        color="success"
                         onClick={() => {
                           formik.handleSubmit();
                         }}
@@ -515,7 +566,7 @@ const AddUser = () => {
           </Card>
         </TabPanel>
       </Box>
-    </>
+    </div>
   );
 };
 

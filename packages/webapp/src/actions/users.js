@@ -1,6 +1,7 @@
 import {
     CREATE_USER,
     RETRIEVE_USERS,
+    RETRIEVE_USER,
     UPDATE_USER,
     DELETE_USER,
   } from "./types";
@@ -32,7 +33,18 @@ import {
       console.log(err);
     }
   };
-  
+  export const getUser = (id) => async (dispatch) => {
+    try {
+      const res = await UserDataService.get(id)
+      dispatch({
+        type: RETRIEVE_USER,
+        payload: {basicInfo:res.data?.basicInfo,academicInfo:res.data?.academicInfo,employementInfo:res.data?.employementInfo},
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   export const updateUser = (id, data) => async (dispatch) => {
     try {
       const res = await UserDataService.update(id, data);

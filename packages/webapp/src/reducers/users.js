@@ -1,6 +1,7 @@
 import {
     CREATE_USER,
     RETRIEVE_USERS,
+    RETRIEVE_USER,
     UPDATE_USER,
     DELETE_USER
   } from "../actions/types";
@@ -16,16 +17,28 @@ import {
   
       case RETRIEVE_USERS:
         return payload;
-  
-      case UPDATE_USER:
-        return users.map((tutorial) => {
-          if (tutorial.id === payload.id) {
+      
+      case RETRIEVE_USER:
+        return users.map((user) => {
+          if (user.id === payload?.basicInfo.id) {
             return {
-              ...tutorial,
+              ...user,
               ...payload,
             };
           } else {
-            return tutorial;
+            return user;
+          }
+        });;
+  
+      case UPDATE_USER:
+        return users.map((user) => {
+          if (user.id === payload.id) {
+            return {
+              ...user,
+              ...payload,
+            };
+          } else {
+            return user;
           }
         });
   
