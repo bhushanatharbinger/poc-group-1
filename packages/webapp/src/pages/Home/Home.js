@@ -123,7 +123,7 @@ const Home = () => {
                   <TableCell align="center">Id</TableCell>
                   <TableCell align="center">First Name</TableCell>
                   <TableCell align="center">Last Name</TableCell>
-                  <TableCell align="center">Email Id</TableCell>
+                  <TableCell align="center">Email</TableCell>
                   <TableCell align="center">Action</TableCell>
                 </TableRow>
               </TableHead>

@@ -50,7 +50,7 @@ TabPanel.propTypes = {
 const AddUser = () => {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.users);
-  const [formValuesAcademic, setformValuesAcademic] = useState([
+  const [formValuesAcademic, setFormValuesAcademic] = useState([
     { type: "", institute: "", passingYear: "" },
   ]);
   const [formValuesEmployement, setFormValuesEmployement] = useState([
@@ -127,20 +127,8 @@ const AddUser = () => {
           lastName: values.lastName ? values.lastName : null,
           email: values.email ? values.email : null,
         },
-        academicInfo: [
-          {
-            type: values.type ? values.type : values.type,
-            institute: values.institute ? values.institute : null,
-            passingYear: values.passingYear ? values.passingYear : null,
-          },
-        ],
-        employementInfo: [
-          {
-            employeeCode: values.employeeCode ? values.employeeCode : null,
-            companyName: values.companyName ? values.companyName : null,
-            designation: values.designation ? values.designation : null,
-          },
-        ],
+        academicInfo: [...formValuesAcademic],
+        employementInfo: [...formValuesEmployement],
       };
       console.log(payload);
       id ? submitUpdateData(payload) : submitAddData(payload);
@@ -184,24 +172,30 @@ const AddUser = () => {
         "designation",
         user?.employementInfo?.[0].designation
       );
+      if (
+        user?.academicInfo?.length !== 0 &&
+        user?.employementInfo?.length !== 0
+      )
+        setFormValuesAcademic(user?.academicInfo);
+      setFormValuesEmployement(user?.employementInfo);
     }
   }, [users]);
   let addFormFieldsAcademic = () => {
-    setformValuesAcademic([
+    setFormValuesAcademic([
       ...formValuesAcademic,
       { type: "", institute: "", passingYear: "" },
     ]);
-    console.log(formValuesAcademic)
+    console.log(formValuesAcademic);
   };
   let handleChangeInputAcademic = (i, e) => {
     let newFormValues = [...formValuesAcademic];
     newFormValues[i][e.target.name] = e.target.value;
-    setformValuesAcademic(newFormValues);
+    setFormValuesAcademic(newFormValues);
   };
   let removeFormFieldsAcademic = (i) => {
     let newFormValues = [...formValuesAcademic];
     newFormValues.splice(i, 1);
-    setformValuesAcademic(newFormValues);
+    setFormValuesAcademic(newFormValues);
   };
   let addFormFieldsEmployement = () => {
     setFormValuesEmployement([
@@ -407,7 +401,7 @@ const AddUser = () => {
                   <span>Academic Information</span>
                 </h2>
               </Typography>
-              {formValuesAcademic.map((element, index) => (
+              {formValuesAcademic?.map((element, index) => (
                 <FormikProvider value={formik}>
                   <Grid container>
                     <Grid item xs={3}>
@@ -422,7 +416,9 @@ const AddUser = () => {
                               fullWidth
                               inputProps={{ maxLength: 50 }}
                               value={element.type || ""}
-                              onChange={e => handleChangeInputAcademic(index, e)}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
                               {...{ error: meta.touched && meta.error }}
                               helperText={
                                 meta.touched && meta.error && meta.error
@@ -451,7 +447,9 @@ const AddUser = () => {
                               placeholder="Enter School/College/University"
                               fullWidth
                               size="small"
-                              onChange={e => handleChangeInputAcademic(index, e)}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
                               value={element.institute || ""}
                               variant="outlined"
                               inputProps={{ maxLength: 50 }}
@@ -481,7 +479,9 @@ const AddUser = () => {
                               variant="outlined"
                               type="number"
                               value={element.passingYear || ""}
-                              onChange={e => handleChangeInputAcademic(index, e)}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
                               inputProps={{ maxLength: 4 }}
                               {...{ error: meta.touched && meta.error }}
                               helperText={
@@ -545,7 +545,7 @@ const AddUser = () => {
                   <span>Employment Information </span>
                 </h2>
               </Typography>
-              {formValuesEmployement.map((element, index) => (
+              {formValuesEmployement?.map((element, index) => (
                 <FormikProvider value={formik}>
                   <Grid container>
                     <Grid item xs={3}>
@@ -561,7 +561,9 @@ const AddUser = () => {
                               size="small"
                               variant="outlined"
                               value={element.employeeCode || ""}
-                              onChange={e => handleChangeInputEmployement(index, e)}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
                               inputProps={{ maxLength: 50 }}
                               {...{ error: meta.touched && meta.error }}
                               helperText={
@@ -588,7 +590,9 @@ const AddUser = () => {
                               variant="outlined"
                               inputProps={{ maxLength: 50 }}
                               value={element.companyName || ""}
-                              onChange={e => handleChangeInputEmployement(index, e)}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
                               {...{ error: meta.touched && meta.error }}
                               helperText={
                                 meta.touched && meta.error && meta.error
@@ -615,7 +619,9 @@ const AddUser = () => {
                               fullWidth
                               inputProps={{ maxLength: 50 }}
                               value={element.designation || ""}
-                              onChange={e => handleChangeInputEmployement(index, e)}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
                               {...{ error: meta.touched && meta.error }}
                               helperText={
                                 meta.touched && meta.error && meta.error
