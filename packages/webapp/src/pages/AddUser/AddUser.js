@@ -1,3 +1,7 @@
+
+import Button from "@mui/material/Button";
+import Alert from '@mui/material/Alert';
+import PropTypes from "prop-types";
 import {
   AppBar,
   Box,
@@ -14,9 +18,7 @@ import {
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Button from "@mui/material/Button";
 import { Field, FormikProvider, useFormik } from "formik";
-import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
@@ -56,6 +58,7 @@ const AddUser = () => {
   const [formValuesEmployement, setFormValuesEmployement] = useState([
     { employeeCode: "", companyName: "", designation: "" },
   ]);
+  const [error,setError] = React.useState(false)
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
     { id: "none", name: "Select Education Type" },
@@ -66,7 +69,7 @@ const AddUser = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const { id } = useParams();
+  const { id } = useParams()
   const navigate = useNavigate();
   let yupSelectNoneValidation = (msg) =>
     Yup.string().test("SelectNoneValidation", msg, function(val) {
@@ -137,8 +140,13 @@ const AddUser = () => {
     },
   });
   const submitAddData = async (e) => {
-    dispatch(createUser(e));
-    navigate("/");
+    dispatch(createUser(e)).then(() => {
+      navigate("/");
+    }).catch(err=>{
+      setError(true)
+      console.log('err',err?.response?.data?.message);
+    });
+    
   };
   const submitUpdateData = async (e) => {
     dispatch(updateUser(id, e));
@@ -677,6 +685,7 @@ const AddUser = () => {
             </CardContent>
           </Card>
         </TabPanel>
+        {error ?<Alert severity="error">Email Already Exist!</Alert>:<></>}
       </Box>
     </div>
   );
