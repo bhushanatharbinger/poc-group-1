@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { Field, FormikProvider, useFormik } from "formik";
+import Alert from '@mui/material/Alert';
 import * as Yup from "yup";
 import PropTypes from "prop-types";
 import { createUser, getUser, updateUser } from '../../actions/users'
@@ -46,6 +47,7 @@ TabPanel.propTypes = {
 };
 const AddUser = () => {
   const dispatch = useDispatch();
+  const [error,setError] = React.useState(false)
   const users = useSelector(state => state.users);
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
@@ -140,8 +142,13 @@ const AddUser = () => {
     },
   });
   const submitAddData = async (e) => {
-    dispatch(createUser(e));
-    navigate("/");
+    dispatch(createUser(e)).then(() => {
+      navigate("/");
+    }).catch(err=>{
+      setError(true)
+      console.log('err',err?.response?.data?.message);
+    });
+    
   };
   const submitUpdateData = async (e) => {
     dispatch(updateUser(id, e));
@@ -554,6 +561,7 @@ const AddUser = () => {
             </CardContent>
           </Card>
         </TabPanel>
+        {error ?<Alert severity="error">Email Already Exist!</Alert>:<></>}
       </Box>
     </div>
   );
