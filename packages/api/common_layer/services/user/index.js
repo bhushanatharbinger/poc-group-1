@@ -8,7 +8,7 @@ const db = require('../../../models')
  * @returns list of array
  */
 user.getUsers = async function () {
-  const users = await db.user.findAll({where:{deleted:false}})
+  const users = await db.user.findAll({ where: { deleted: false } })
   let _data = [];
   users.map((data) => {
     _data.push(data);
@@ -43,6 +43,12 @@ user.getUserDetails = async function (userId) {
  * @returns returns user id of newely created record
  */
 user.addUser = async function (basicInfo, academicInfo, employementInfo) {
+  const existingUser = await db.user.findAll({ where: { email: basicInfo.email } })
+  if (existingUser.length > 0) {
+    return {
+      error: 'Email Already Exist!'
+    }
+  }
   const user = await db.user.create({
     firstName: basicInfo.firstName,
     lastName: basicInfo.lastName,
@@ -80,6 +86,12 @@ user.addUser = async function (basicInfo, academicInfo, employementInfo) {
  */
 user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
   const userId = basicInfo?.id
+  const existingUser = await db.user.findAll({ where: { email: basicInfo.email, id: userId } })
+  if (existingUser.length > 0) {
+    return {
+      error: 'Email Already Exist!'
+    }
+  }
   await db.user.update({
     firstName: basicInfo.firstName,
     lastName: basicInfo.lastName,
@@ -133,7 +145,7 @@ user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
 user.deleteUser = async function (userId) {
   const _user = await db.user.update({
     deleted: true
-  }, { where: { id: userId } })  
+  }, { where: { id: userId } })
   if (_user?.[0] == 1) {
     return {
       id: userId

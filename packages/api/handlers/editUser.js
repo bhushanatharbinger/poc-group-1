@@ -12,6 +12,9 @@ module.exports.handler = async (event) => {
   try {
     if (typeof basicInfo?.firstName == "string" && typeof basicInfo?.lastName == "string" && typeof basicInfo?.email == "string") {
       const user = await updateUser(basicInfo,academicInfo,employementInfo);
+      if(user?.error){
+        return res_400({ message: user?.error })  
+      }
       return res_201({ user });
     } else {
       return res_400({ message: "Invalid Data!" })
