@@ -97,37 +97,23 @@ user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
     lastName: basicInfo.lastName,
     email: basicInfo.email
   }, { where: { id: userId } })
+  await db.academic.deleteAll({user_id:userId})
   academicInfo.map(async _a => {
-    if (_a.id) {
-      await db.academic.update({
-        type: _a.type,
-        institute: _a.institute,
-        passingYear: _a.passingYear
-      }, { where: { id: _a.id } })
-    } else {
       await db.academic.create({
         user_id: userId,
         type: _a.type,
         institute: _a.institute,
         passingYear: _a.passingYear
       })
-    }
   })
+  await db.employement.deleteAll({user_id:userId})
   employementInfo.map(async _e => {
-    if (_e.id) {
-      await db.employement.update({
-        employeeCode: _e.employeeCode,
-        companyName: _e.companyName,
-        designation: _e.designation
-      }, { where: { id: _e.id } })
-    } else {
       await db.employement.create({
         user_id: userId,
         employeeCode: _e.employeeCode,
         companyName: _e.companyName,
         designation: _e.designation
       })
-    }
   })
   return {
     id: userId,
