@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
-import Button from "@mui/material/Button";
-import { Field, FormikProvider, useFormik } from "formik";
-import * as Yup from "yup";
-import PropTypes from "prop-types";
-import { createUser, getUser, updateUser } from '../../actions/users'
 import {
-  Tabs,
-  Tab,
+  AppBar,
+  Box,
   Card,
   CardContent,
   Grid,
   InputLabel,
+  MenuItem,
+  Tab,
+  Tabs,
   TextField,
-  Typography,
-  AppBar,
   Toolbar,
-  Box, MenuItem
+  Typography,
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
+import { Field, FormikProvider, useFormik } from "formik";
+import PropTypes from "prop-types";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import * as Yup from "yup";
+import { createUser, getUser, updateUser } from "../../actions/users";
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -46,7 +49,13 @@ TabPanel.propTypes = {
 };
 const AddUser = () => {
   const dispatch = useDispatch();
-  const users = useSelector(state => state.users);
+  const users = useSelector((state) => state.users);
+  const [formValuesAcademic, setformValuesAcademic] = useState([
+    { type: "", institute: "", passingYear: "" },
+  ]);
+  const [formValuesEmployement, setFormValuesEmployement] = useState([
+    { employeeCode: "", companyName: "", designation: "" },
+  ]);
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
     { id: "none", name: "Select Education Type" },
@@ -59,9 +68,10 @@ const AddUser = () => {
   };
   const { id } = useParams();
   const navigate = useNavigate();
-  let yupSelectNoneValidation = (msg) => Yup.string().test('SelectNoneValidation', msg, function (val) {
-    return val !== "none";
-  });
+  let yupSelectNoneValidation = (msg) =>
+    Yup.string().test("SelectNoneValidation", msg, function(val) {
+      return val !== "none";
+    });
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -85,7 +95,7 @@ const AddUser = () => {
         .required("Last Name is Required"),
       email: Yup.string()
         .email("Invalid email format")
-        .required("Email is Required")
+        .required("Email is Required"),
       // type: yupSelectNoneValidation('Education is Required'),
       // institute: Yup.string()
       //   .min(4, "Must be 4 charecters or more")
@@ -107,7 +117,6 @@ const AddUser = () => {
       //   .min(4, "Must be 4 charecters or more")
       //   .max(20, "Must be 20 characters or less")
       //   .required("Designation is Required"),
-
     }),
     onSubmit: (values) => {
       console.log(values);
@@ -133,7 +142,7 @@ const AddUser = () => {
           },
         ],
       };
-      console.log(payload)
+      console.log(payload);
       id ? submitUpdateData(payload) : submitAddData(payload);
       // submitData(values);
       formik.resetForm();
@@ -155,19 +164,61 @@ const AddUser = () => {
   }
   useEffect(() => {
     if (id) {
-      const user = users.find(_u => _u.id == id);
-      console.log('user', user)
+      const user = users.find((_u) => _u.id == id);
+      console.log("user", user);
       formik.setFieldValue("firstName", user?.basicInfo?.firstName);
       formik.setFieldValue("lastName", user?.basicInfo?.lastName);
       formik.setFieldValue("email", user?.basicInfo?.email);
       formik.setFieldValue("type", user?.academicInfo?.[0].type);
       formik.setFieldValue("institute", user?.academicInfo?.[0].institute);
       formik.setFieldValue("passingYear", user?.academicInfo?.[0].passingYear);
-      formik.setFieldValue("employeeCode", user?.employementInfo?.[0].employeeCode);
-      formik.setFieldValue("companyName", user?.employementInfo?.[0].companyName);
-      formik.setFieldValue("designation", user?.employementInfo?.[0].designation);
+      formik.setFieldValue(
+        "employeeCode",
+        user?.employementInfo?.[0].employeeCode
+      );
+      formik.setFieldValue(
+        "companyName",
+        user?.employementInfo?.[0].companyName
+      );
+      formik.setFieldValue(
+        "designation",
+        user?.employementInfo?.[0].designation
+      );
     }
   }, [users]);
+  let addFormFieldsAcademic = () => {
+    setformValuesAcademic([
+      ...formValuesAcademic,
+      { type: "", institute: "", passingYear: "" },
+    ]);
+    console.log(formValuesAcademic)
+  };
+  let handleChangeInputAcademic = (i, e) => {
+    let newFormValues = [...formValuesAcademic];
+    newFormValues[i][e.target.name] = e.target.value;
+    setformValuesAcademic(newFormValues);
+  };
+  let removeFormFieldsAcademic = (i) => {
+    let newFormValues = [...formValuesAcademic];
+    newFormValues.splice(i, 1);
+    setformValuesAcademic(newFormValues);
+  };
+  let addFormFieldsEmployement = () => {
+    setFormValuesEmployement([
+      ...formValuesEmployement,
+      { employeeCode: "", companyName: "", designation: "" },
+    ]);
+  };
+  let handleChangeInputEmployement = (i, e) => {
+    let newFormValues = [...formValuesEmployement];
+    newFormValues[i][e.target.name] = e.target.value;
+    setFormValuesEmployement(newFormValues);
+  };
+  let removeFormFieldsEmployement = (i) => {
+    let newFormValues = [...formValuesEmployement];
+    newFormValues.splice(i, 1);
+    setFormValuesEmployement(newFormValues);
+  };
   useEffect(() => {
     if (id) {
       dispatch(getUser(id));
@@ -180,12 +231,21 @@ const AddUser = () => {
         color="default"
         elevation={0}
         sx={{
-          position: 'relative',
+          position: "relative",
           borderBottom: (t) => `1px solid ${t.palette.divider}`,
         }}
       >
-        <Toolbar style={{ width: "100%", justifyContent: 'center' }} align="center">
-          <Typography style={{ width: "100%" }} align="center" variant="h6" color="inherit" noWrap>
+        <Toolbar
+          style={{ width: "100%", justifyContent: "center" }}
+          align="center"
+        >
+          <Typography
+            style={{ width: "100%" }}
+            align="center"
+            variant="h6"
+            color="inherit"
+            noWrap
+          >
             POC-GROUP-1
           </Typography>
         </Toolbar>
@@ -230,6 +290,7 @@ const AddUser = () => {
                   <span>Basic Information</span>
                 </h2>
               </Typography>
+
               <FormikProvider value={formik}>
                 <Grid container>
                   <Grid item xs={3}>
@@ -307,36 +368,34 @@ const AddUser = () => {
                     </Field>
                   </Grid>
                   <br />
-
                   <br />
                   <Grid item xs={9}></Grid>
                   <Grid item xs={4}></Grid>
-                  <Grid item xs={3}>
-                    <div className={`col-2`}>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          formik.setTouched({
-                            firstName: true,
-                            lastName: true,
-                            email: true,
-                          })
-                          formik.validateForm().then((err) => {
-                            if (err.firstName || err.lastName || err.email) {
-                              return
-                            } else {
-                              setValue(1);
-                            }
-                          })
-
-                        }}
-                      >
-                        Next
-                      </Button>
-                    </div>
-                  </Grid>
                 </Grid>
               </FormikProvider>
+              <Grid item xs={3}>
+                <div className={`col-2`}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      formik.setTouched({
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                      });
+                      formik.validateForm().then((err) => {
+                        if (err.firstName || err.lastName || err.email) {
+                          return;
+                        } else {
+                          setValue(1);
+                        }
+                      });
+                    }}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </Grid>
             </CardContent>
           </Card>
         </TabPanel>
@@ -348,105 +407,133 @@ const AddUser = () => {
                   <span>Academic Information</span>
                 </h2>
               </Typography>
-              <FormikProvider value={formik}>
-                <Grid container>
-                  <Grid item xs={3}>
-                    <Field name="type">
-                      {({ field, meta }) => (
-                        <div>
-                          <InputLabel required>Education Type</InputLabel>
-                          <TextField
-                            {...field}
-                            select
-                            size="small"
-                            fullWidth
-                            inputProps={{ maxLength: 50 }}
-                            {...{ error: meta.touched && meta.error }}
-                            helperText={
-                              meta.touched && meta.error && meta.error
-                            }
-                          >
-                            {educationList.map((e) => (
-                              <MenuItem key={e.id} value={e.name}>
-                                {e.name}
-                              </MenuItem>
-                            ))}
-                          </TextField>
-                        </div>
-                      )}
-                    </Field>
+              {formValuesAcademic.map((element, index) => (
+                <FormikProvider value={formik}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Field name="type">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel required>Education Type</InputLabel>
+                            <TextField
+                              {...field}
+                              select
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.type || ""}
+                              onChange={e => handleChangeInputAcademic(index, e)}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            >
+                              {educationList.map((e) => (
+                                <MenuItem key={e.id} value={e.name}>
+                                  {e.name}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="institute">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>School/College/University </InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter School/College/University"
+                              fullWidth
+                              size="small"
+                              onChange={e => handleChangeInputAcademic(index, e)}
+                              value={element.institute || ""}
+                              variant="outlined"
+                              inputProps={{ maxLength: 50 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
                     <br />
-                  </Grid>
-                  <Grid item xs={1}></Grid>
-                  <Grid item xs={3}>
-                    <Field name="institute">
-                      {({ field, meta }) => (
-                        <div>
-                          <InputLabel >
-                            School/College/University{" "}
-                          </InputLabel>
-                          <TextField
-                            {...field}
-                            // disabled={formik.values.view ? true : false}
-                            placeholder="Enter School/College/University"
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            inputProps={{ maxLength: 50 }}
-                            {...{ error: meta.touched && meta.error }}
-                            helperText={
-                              meta.touched && meta.error && meta.error
-                            }
-                          />
-                        </div>
-                      )}
-                    </Field>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="passingYear">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Passing year</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Passing year"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              type="number"
+                              value={element.passingYear || ""}
+                              onChange={e => handleChangeInputAcademic(index, e)}
+                              inputProps={{ maxLength: 4 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                    </Grid>
                     <br />
-                  </Grid>
-                  <br />
-                  <Grid item xs={1}></Grid>
-                  <Grid item xs={3}>
-                    <Field name="passingYear">
-                      {({ field, meta }) => (
-                        <div>
-                          <InputLabel>Passing year</InputLabel>
-                          <TextField
-                            {...field}
-                            // disabled={formik.values.view ? true : false}
-                            placeholder="Enter Passing year"
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            type="number"
-                            inputProps={{ maxLength: 4, }}
-                            {...{ error: meta.touched && meta.error }}
-                            helperText={
-                              meta.touched && meta.error && meta.error
-                            }
-                          />
-                        </div>
-                      )}
-                    </Field>
-                  </Grid>
-                  <br />
-
-                  <br />
-                  <Grid item xs={9}></Grid>
-                  <Grid item xs={4}></Grid>
-                  <Grid item xs={3}>
-                    <div className={`col-2`}>
-                      <Button
-                        variant="contained"
-                        onClick={() => {
-                          setValue(2);
-                        }}
+                    {index ? (
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => removeFormFieldsAcademic(index)}
                       >
-                        Next
-                      </Button>
-                    </div>
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null}
+                    <br />
+                    <Grid item xs={9}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={3}>
+                      <div className={`col-2`}>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            setValue(2);
+                          }}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </FormikProvider>
+                </FormikProvider>
+              ))}
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsAcademic()}
+              >
+                Add
+              </Button>
             </CardContent>
           </Card>
         </TabPanel>
@@ -458,99 +545,129 @@ const AddUser = () => {
                   <span>Employment Information </span>
                 </h2>
               </Typography>
-              <FormikProvider value={formik}>
-                <Grid container>
-                  <Grid item xs={3}>
-                    <Field name="employeeCode">
-                      {({ field, meta }) => (
-                        <div>
-                          <InputLabel>Employee Code</InputLabel>
-                          <TextField
-                            {...field}
-                            // disabled={formik.values.view ? true : false}
-                            placeholder="Enter Employee Cpde"
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            inputProps={{ maxLength: 50 }}
-                            {...{ error: meta.touched && meta.error }}
-                            helperText={
-                              meta.touched && meta.error && meta.error
-                            }
-                          />
-                        </div>
-                      )}
-                    </Field>
+              {formValuesEmployement.map((element, index) => (
+                <FormikProvider value={formik}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Field name="employeeCode">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Employee Code</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Employee Cpde"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              value={element.employeeCode || ""}
+                              onChange={e => handleChangeInputEmployement(index, e)}
+                              inputProps={{ maxLength: 50 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="companyName">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Company Name</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Company Name"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              inputProps={{ maxLength: 50 }}
+                              value={element.companyName || ""}
+                              onChange={e => handleChangeInputEmployement(index, e)}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
                     <br />
-                  </Grid>
-                  <Grid item xs={1}></Grid>
-                  <Grid item xs={3}>
-                    <Field name="companyName">
-                      {({ field, meta }) => (
-                        <div>
-                          <InputLabel>Company Name</InputLabel>
-                          <TextField
-                            {...field}
-                            // disabled={formik.values.view ? true : false}
-                            placeholder="Enter Company Name"
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            inputProps={{ maxLength: 50 }}
-                            {...{ error: meta.touched && meta.error }}
-                            helperText={
-                              meta.touched && meta.error && meta.error
-                            }
-                          />
-                        </div>
-                      )}
-                    </Field>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="designation">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Designation</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Designation"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.designation || ""}
+                              onChange={e => handleChangeInputEmployement(index, e)}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                    </Grid>
                     <br />
-                  </Grid>
-                  <br />
-                  <Grid item xs={1}></Grid>
-                  <Grid item xs={3}>
-                    <Field name="designation">
-                      {({ field, meta }) => (
-                        <div>
-                          <InputLabel>Designation</InputLabel>
-                          <TextField
-                            {...field}
-                            // disabled={formik.values.view ? true : false}
-                            placeholder="Enter Designation"
-                            variant="outlined"
-                            size="small"
-                            fullWidth
-                            inputProps={{ maxLength: 50 }}
-                            {...{ error: meta.touched && meta.error }}
-                            helperText={
-                              meta.touched && meta.error && meta.error
-                            }
-                          />
-                        </div>
-                      )}
-                    </Field>
-                  </Grid>
-                  <br />
-
-                  <br />
-                  <Grid item xs={9}></Grid>
-                  <Grid item xs={4}></Grid>
-                  <Grid item xs={3}>
-                    <div className={`col-2`}>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={() => {
-                          formik.handleSubmit();
-                        }}
+                    {index ? (
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => removeFormFieldsEmployement(index)}
                       >
-                        {id ? "Update" : "Save"}
-                      </Button>
-                    </div>
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null}
+                    <br />
+                    <Grid item xs={9}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={3}>
+                      <div className={`col-2`}>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={() => {
+                            formik.handleSubmit();
+                          }}
+                        >
+                          {id ? "Update" : "Save"}
+                        </Button>
+                      </div>
+                    </Grid>
                   </Grid>
-                </Grid>
-              </FormikProvider>
+                </FormikProvider>
+              ))}
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsEmployement()}
+              >
+                Add
+              </Button>
             </CardContent>
           </Card>
         </TabPanel>
