@@ -58,7 +58,7 @@ const AddUser = () => {
   const [formValuesEmployement, setFormValuesEmployement] = useState([
     { employeeCode: "", companyName: "", designation: "" },
   ]);
-  const [error,setError] = React.useState(false)
+  const [error, setError] = React.useState(false)
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
     { id: "none", name: "Select Education Type" },
@@ -72,7 +72,7 @@ const AddUser = () => {
   const { id } = useParams()
   const navigate = useNavigate();
   let yupSelectNoneValidation = (msg) =>
-    Yup.string().test("SelectNoneValidation", msg, function(val) {
+    Yup.string().test("SelectNoneValidation", msg, function (val) {
       return val !== "none";
     });
   const formik = useFormik({
@@ -142,11 +142,11 @@ const AddUser = () => {
   const submitAddData = async (e) => {
     dispatch(createUser(e)).then(() => {
       navigate("/");
-    }).catch(err=>{
+    }).catch(err => {
       setError(true)
-      console.log('err',err?.response?.data?.message);
+      console.log('err', err?.response?.data?.message);
     });
-    
+
   };
   const submitUpdateData = async (e) => {
     dispatch(updateUser(id, e));
@@ -513,35 +513,33 @@ const AddUser = () => {
                     <br />
                     <Grid item xs={9}></Grid>
                     <Grid item xs={4}></Grid>
-                    <Grid item xs={3}>
-                      <div className={`col-2`}>
-                        <Button
-                          variant="contained"
-                          onClick={() => {
-                            setValue(2);
-                          }}
-                        >
-                          Next
-                        </Button>
-                      </div>
-                    </Grid>
+
                   </Grid>
                 </FormikProvider>
               ))}
-              <Button
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  height: "37px",
-                  marginLeft: "10px",
-                  marginTop: "24px",
-                }}
-                variant="contained"
-                color="success"
-                onClick={() => addFormFieldsAcademic()}
-              >
-                Add
-              </Button>
+              <Grid item xs={3}>
+                <div className={`col-2`}>
+                  <Button
+                    sx={{
+                      marginRight: "10px",
+                    }}
+                    variant="contained"
+                    color="success"
+                    onClick={() => addFormFieldsAcademic()}
+                  >
+                    Add
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setValue(2);
+                    }}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </Grid>
+
             </CardContent>
           </Card>
         </TabPanel>
@@ -652,40 +650,36 @@ const AddUser = () => {
                     <br />
                     <Grid item xs={9}></Grid>
                     <Grid item xs={4}></Grid>
-                    <Grid item xs={3}>
-                      <div className={`col-2`}>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          onClick={() => {
-                            formik.handleSubmit();
-                          }}
-                        >
-                          {id ? "Update" : "Save"}
-                        </Button>
-                      </div>
-                    </Grid>
                   </Grid>
                 </FormikProvider>
               ))}
-              <Button
-                sx={{
-                  display: "flex",
-                  justifyContent: "flex-end",
-                  height: "37px",
-                  marginLeft: "10px",
-                  marginTop: "24px",
-                }}
-                variant="contained"
-                color="success"
-                onClick={() => addFormFieldsEmployement()}
-              >
-                Add
-              </Button>
+              <Grid item xs={3}>
+                <div className={`col-2`}>
+                  <Button
+                    sx={{
+                      marginRight: "10px",
+                    }}
+                    variant="contained"
+                    color="success"
+                    onClick={() => addFormFieldsEmployement()}
+                  >
+                    Add
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    onClick={() => {
+                      formik.handleSubmit();
+                    }}
+                  >
+                    {id ? "Update" : "Save"}
+                  </Button>
+                </div>
+              </Grid>
             </CardContent>
           </Card>
         </TabPanel>
-        {error ?<Alert severity="error">Email Already Exist!</Alert>:<></>}
+        {error ? <Alert severity="error">Email Already Exist!</Alert> : <></>}
       </Box>
     </div>
   );
