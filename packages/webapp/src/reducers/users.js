@@ -33,10 +33,11 @@ import {
       case UPDATE_USER:
         return users.map((user) => {
           if (user.id == payload.id) {
-            return {
-              ...user,
-              ...payload,
-            };
+            const _newUser ={...user}
+            _newUser.basicInfo = payload.basicInfo
+            _newUser.employementInfo = payload.employementInfo
+            _newUser.academicInfo = payload.academicInfo
+            return _newUser
           } else {
             return user;
           }
