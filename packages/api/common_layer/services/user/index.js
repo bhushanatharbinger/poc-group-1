@@ -3,6 +3,7 @@
  */
 const user = {};
 const db = require('../../../models')
+
 /**
  * @description Service method to return all users
  * @returns list of array
