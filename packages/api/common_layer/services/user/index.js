@@ -86,12 +86,7 @@ user.addUser = async function (basicInfo, academicInfo, employementInfo) {
  */
 user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
   const userId = basicInfo?.id
-  const existingUser = await db.user.findAll({ where: { email: basicInfo.email, id: userId } })
-  if (existingUser.length > 0) {
-    return {
-      error: 'Email Already Exist!'
-    }
-  }
+  
   await db.user.update({
     firstName: basicInfo.firstName,
     lastName: basicInfo.lastName,
