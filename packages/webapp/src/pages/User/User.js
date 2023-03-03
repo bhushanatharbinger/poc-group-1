@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
+import Divider from "@mui/material/Divider"
 import { getUser } from "../../actions/users";
 const User = () => {
   const dispatch = useDispatch();
@@ -101,9 +102,12 @@ const User = () => {
             </Typography>
             {user?.academicInfo?.map((element) => (
               <div>
+                <br />
                 <Typography><b>Type: </b>{element?.type}</Typography>
               <Typography><b>Institute:</b> {element?.institute}</Typography>
               <Typography><b>PassingYear:</b> {element?.passingYear}</Typography>
+              <br />
+              <Divider />
               </div>
             ))}
           </Card>
@@ -120,9 +124,12 @@ const User = () => {
             </Typography>
             {user?.employementInfo?.map((element) => (
               <div>
-                <Typography><b>EmployeeCode:: </b>{element?.employeeCode}</Typography>
+                <br />
+                <Typography><b>EmployeeCode: </b>{element?.employeeCode}</Typography>
               <Typography><b>CompanyNam:</b> {element?.companyName}</Typography>
               <Typography><b>Designation:</b> {element?.designation}</Typography>
+              <br />
+              <Divider />
               </div>
             ))}
           </Card>
