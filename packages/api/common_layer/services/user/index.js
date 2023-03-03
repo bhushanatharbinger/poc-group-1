@@ -87,18 +87,13 @@ user.addUser = async function (basicInfo, academicInfo, employementInfo) {
  */
 user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
   const userId = basicInfo?.id
-  const existingUser = await db.user.findAll({ where: { email: basicInfo.email, id: userId } })
-  if (existingUser.length > 0) {
-    return {
-      error: 'Email Already Exist!'
-    }
-  }
+  
   await db.user.update({
     firstName: basicInfo.firstName,
     lastName: basicInfo.lastName,
     email: basicInfo.email
   }, { where: { id: userId } })
-  await db.academic.deleteAll({user_id:userId})
+  await db.academic.destroy({where:{user_id:userId},truncate: true})
   academicInfo.map(async _a => {
       await db.academic.create({
         user_id: userId,
@@ -107,7 +102,7 @@ user.updateUser = async function (basicInfo, academicInfo, employementInfo) {
         passingYear: _a.passingYear
       })
   })
-  await db.employement.deleteAll({user_id:userId})
+  await db.employement.destroy({where:{user_id:userId},truncate: true})
   employementInfo.map(async _e => {
       await db.employement.create({
         user_id: userId,

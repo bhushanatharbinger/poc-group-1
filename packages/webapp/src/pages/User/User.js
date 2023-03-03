@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import AppBar from '@mui/material/AppBar';
-import Typography from '@mui/material/Typography';
-import Toolbar from '@mui/material/Toolbar';
+import AppBar from "@mui/material/AppBar";
+import Typography from "@mui/material/Typography";
+import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
-import Card from '@mui/material/Card';
-import { getUser } from '../../actions/users'
+import Card from "@mui/material/Card";
+import { getUser } from "../../actions/users";
 const User = () => {
   const dispatch = useDispatch();
-  const users = useSelector(state => state.users);
-  const [user, setUser] = useState({})
+  const users = useSelector((state) => state.users);
+  const [user, setUser] = useState({});
   const { id } = useParams();
   useEffect(() => {
     if (id) {
-      const user = users.find(_u => _u.id == id);
-      console.log('user', user)
-      setUser(user)
+      const user = users.find((_u) => _u.id == id);
+      console.log("user", user);
+      setUser(user);
     }
   }, [users]);
   useEffect(() => {
@@ -31,12 +31,21 @@ const User = () => {
         color="default"
         elevation={0}
         sx={{
-          position: 'relative',
+          position: "relative",
           borderBottom: (t) => `1px solid ${t.palette.divider}`,
         }}
       >
-        <Toolbar style={{ width: "100%", justifyContent: 'center' }} align="center">
-          <Typography style={{ width: "100%" }} align="center" variant="h6" color="inherit" noWrap>
+        <Toolbar
+          style={{ width: "100%", justifyContent: "center" }}
+          align="center"
+        >
+          <Typography
+            style={{ width: "100%" }}
+            align="center"
+            variant="h6"
+            color="inherit"
+            noWrap
+          >
             POC-GROUP-1
           </Typography>
         </Toolbar>
@@ -64,23 +73,58 @@ const User = () => {
       >
         <hr />
         <Box>
-          <Card variant="outlined" sx={{ paddingTop: "10px", paddingBottom: "10px", marginBottom: "10px" }}>
-            <Typography variant="h5" gutterBottom>Basic Information</Typography>
-            <Typography >first Name: {user?.basicInfo?.firstName}</Typography>
-            <Typography >last name: {user?.basicInfo?.lastName}</Typography>
-            <Typography >email: {user?.basicInfo?.email}</Typography>
+          <Card
+            variant="outlined"
+            sx={{
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            <Typography variant="h5" gutterBottom>
+              Basic Information
+            </Typography>
+            <Typography><b>First Name: </b> {user?.basicInfo?.firstName}</Typography>
+            <Typography><b>Last Name: </b> {user?.basicInfo?.lastName}</Typography>
+            <Typography><b>Email: </b> {user?.basicInfo?.email}</Typography>
           </Card>
-          <Card variant="outlined" sx={{ paddingTop: "10px", paddingBottom: "10px", marginBottom: "10px" }}>
-            <Typography variant="h5" gutterBottom>Academic Information</Typography>
-            <Typography >type: {user?.academicInfo?.[0].type}</Typography>
-            <Typography >institute: {user?.academicInfo?.[0].institute}</Typography>
-            <Typography >passingYear: {user?.academicInfo?.[0].passingYear}</Typography>
+          <Card
+            variant="outlined"
+            sx={{
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            <Typography variant="h5" gutterBottom>
+              Academic Information
+            </Typography>
+            {user?.academicInfo?.map((element) => (
+              <div>
+                <Typography><b>Type: </b>{element?.type}</Typography>
+              <Typography><b>Institute:</b> {element?.institute}</Typography>
+              <Typography><b>PassingYear:</b> {element?.passingYear}</Typography>
+              </div>
+            ))}
           </Card>
-          <Card variant="outlined" sx={{ paddingTop: "10px", paddingBottom: "10px", marginBottom: "10px" }}>
-            <Typography variant="h5" gutterBottom>Employment Information</Typography>
-            <Typography >employeeCode: {user?.employementInfo?.[0].employeeCode}</Typography>
-            <Typography >companyName: {user?.employementInfo?.[0].companyName}</Typography>
-            <Typography >designation: {user?.employementInfo?.[0].designation}</Typography>
+          <Card
+            variant="outlined"
+            sx={{
+              paddingTop: "10px",
+              paddingBottom: "10px",
+              marginBottom: "10px",
+            }}
+          >
+            <Typography variant="h5" gutterBottom>
+              Employment Information
+            </Typography>
+            {user?.employementInfo?.map((element) => (
+              <div>
+                <Typography><b>EmployeeCode:: </b>{element?.employeeCode}</Typography>
+              <Typography><b>CompanyNam:</b> {element?.companyName}</Typography>
+              <Typography><b>Designation:</b> {element?.designation}</Typography>
+              </div>
+            ))}
           </Card>
         </Box>
       </Box>
