@@ -272,8 +272,8 @@ const AddUser = () => {
             aria-label="basic tabs example"
           >
             <Tab label="Basic Information" {...a11yProps(0)} />
-            <Tab label="Academic Information" {...a11yProps(1)} />
-            <Tab label="Employment Information" {...a11yProps(2)} />
+            <Tab label="Academic Information" {...a11yProps(1)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' ? true : false} />
+            <Tab label="Employment Information" {...a11yProps(2)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' ? true : false}/>
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
