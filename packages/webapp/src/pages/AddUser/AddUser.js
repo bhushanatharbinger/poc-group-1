@@ -86,12 +86,8 @@ const AddUser = () => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
-        .min(4, "Must be 4 charecters or more")
-        .max(20, "Must be 20 characters or less")
         .required("First Name is  Required"),
       lastName: Yup.string()
-        .min(4, "Must be 4 charecters or more")
-        .max(20, "Must be 20 characters or less")
         .required("Last Name is Required"),
       email: Yup.string()
         .email("Invalid email format")
@@ -272,8 +268,8 @@ const AddUser = () => {
             aria-label="basic tabs example"
           >
             <Tab label="Basic Information" {...a11yProps(0)} />
-            <Tab label="Academic Information" {...a11yProps(1)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' ? true : false} />
-            <Tab label="Employment Information" {...a11yProps(2)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' ? true : false}/>
+            <Tab label="Academic Information" {...a11yProps(1)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' || formik.errors.email === "Invalid email format" ? true : false} />
+            <Tab label="Employment Information" {...a11yProps(2)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' || formik.errors.email === "Invalid email format" ? true : false}/>
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
