@@ -69,7 +69,7 @@ const AddUser = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   let yupSelectNoneValidation = (msg) =>
-    Yup.string().test("SelectNoneValidation", msg, function(val) {
+    Yup.string().test("SelectNoneValidation", msg, function (val) {
       return val !== "none";
     });
   const formik = useFormik({
@@ -86,11 +86,16 @@ const AddUser = () => {
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
-        .required("First Name is  Required"),
+        .trim()
+        .required("First Name is  Required")
+        .matches(/^[aA-zZ\s]+$/, "Enter Valid First Name"),
       lastName: Yup.string()
-        .required("Last Name is Required"),
+      .trim()
+        .required("First Name is  Required")
+        .matches(/^[aA-zZ\s]+$/, "Enter Valid Last Name"),
       email: Yup.string()
         .email("Invalid email format")
+        .matches(/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/, "Invalid email format")
         .required("Email is Required"),
       // type: yupSelectNoneValidation('Education is Required'),
       // institute: Yup.string()
@@ -268,8 +273,30 @@ const AddUser = () => {
             aria-label="basic tabs example"
           >
             <Tab label="Basic Information" {...a11yProps(0)} />
-            <Tab label="Academic Information" {...a11yProps(1)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' || formik.errors.email === "Invalid email format" ? true : false} />
-            <Tab label="Employment Information" {...a11yProps(2)} disabled={formik?.values?.firstName === '' || formik?.values?.lastName === '' || formik?.values?.email === '' || formik.errors.email === "Invalid email format" ? true : false}/>
+            <Tab
+              label="Academic Information"
+              {...a11yProps(1)}
+              disabled={
+                formik?.values?.firstName === "" ||
+                formik?.values?.lastName === "" ||
+                formik?.values?.email === "" ||
+                formik.errors.email === "Invalid email format"
+                  ? true
+                  : false
+              }
+            />
+            <Tab
+              label="Employment Information"
+              {...a11yProps(2)}
+              disabled={
+                formik?.values?.firstName === "" ||
+                formik?.values?.lastName === "" ||
+                formik?.values?.email === "" ||
+                formik.errors.email === "Invalid email format"
+                  ? true
+                  : false
+              }
+            />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -502,8 +529,8 @@ const AddUser = () => {
                     <Grid item xs={9}></Grid>
                     <Grid item xs={4}></Grid>
                     <Grid item xs={3}>
-                    <div className={`col-2`}>
-                      <Button
+                      <div className={`col-2`}>
+                        <Button
                           variant="contained"
                           sx={{
                             marginRight: "10px",
@@ -653,7 +680,7 @@ const AddUser = () => {
                     <Grid item xs={4}></Grid>
                     <Grid item xs={3}>
                       <div className={`col-2`}>
-                      <Button
+                        <Button
                           variant="contained"
                           sx={{
                             marginRight: "10px",
