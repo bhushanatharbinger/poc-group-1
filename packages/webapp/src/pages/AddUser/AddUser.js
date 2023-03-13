@@ -9,9 +9,14 @@ import {
   Tab,
   Tabs,
   TextField,
+  Paper,
   Toolbar,
   Typography,
 } from "@mui/material";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import StepContent from "@mui/material/StepContent";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -76,6 +81,30 @@ const AddUser = () => {
     Yup.string().test("SelectNoneValidation", msg, function (val) {
       return val !== "none";
     });
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const steps = [
+    {
+      label: "Basic Information",
+    },
+    {
+      label: "Academic Information",
+    },
+    {
+      label: "Employeement Information",
+    },
+  ];
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -160,6 +189,435 @@ const AddUser = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
+  const handleSteps = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            <Typography
+              sx={{ marginTop: "10px", marginLeft: "150px", width: 1000 }}
+              color="textSecondary"
+              gutterBottom
+            >
+              <h2>
+                <span>{steps[step].label}</span>
+              </h2>
+            </Typography>
+            <Box
+              sx={{
+                mx: "auto",
+                width: 1000,
+                p: 1,
+                // m: 1,
+                mt: 5,
+                ml: 17,
+                bgcolor: (theme) =>
+                  theme.palette.mode === "dark" ? "#101010" : "grey.50",
+                color: (theme) =>
+                  theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                border: "1px solid",
+                borderColor: (theme) =>
+                  theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                borderRadius: 2,
+                textAlign: "center",
+                fontSize: "0.875rem",
+                fontWeight: "700",
+              }}
+            >
+              <FormikProvider value={formik}>
+                <Grid container>
+                  <Grid item xs={3}>
+                    <Field name="firstName">
+                      {({ field, meta }) => (
+                        <div>
+                          <InputLabel required>First Name</InputLabel>
+                          <TextField
+                            {...field}
+                            // disabled={formik.values.view ? true : false}
+                            placeholder="Enter First Name"
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            inputProps={{ maxLength: 50 }}
+                            {...{ error: meta.touched && meta.error }}
+                            helperText={
+                              meta.touched && meta.error && meta.error
+                            }
+                          />
+                        </div>
+                      )}
+                    </Field>
+                    <br />
+                  </Grid>
+                  <Grid item xs={1}></Grid>
+                  <Grid item xs={3}>
+                    <Field name="lastName">
+                      {({ field, meta }) => (
+                        <div>
+                          <InputLabel required>Last Name</InputLabel>
+                          <TextField
+                            {...field}
+                            // disabled={formik.values.view ? true : false}
+                            placeholder="Enter Last Name"
+                            required
+                            fullWidth
+                            size="small"
+                            variant="outlined"
+                            inputProps={{ maxLength: 50 }}
+                            {...{ error: meta.touched && meta.error }}
+                            helperText={
+                              meta.touched && meta.error && meta.error
+                            }
+                          />
+                        </div>
+                      )}
+                    </Field>
+                    <br />
+                  </Grid>
+                  <br />
+                  <Grid item xs={1}></Grid>
+                  <Grid item xs={3}>
+                    <Field name="email">
+                      {({ field, meta }) => (
+                        <div>
+                          <InputLabel required>Email</InputLabel>
+                          <TextField
+                            {...field}
+                            // disabled={formik.values.view ? true : false}
+                            placeholder="Enter Email"
+                            required
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            inputProps={{ maxLength: 50 }}
+                            {...{ error: meta.touched && meta.error }}
+                            helperText={
+                              meta.touched && meta.error && meta.error
+                            }
+                          />
+                        </div>
+                      )}
+                    </Field>
+                  </Grid>
+                  <br />
+                  <br />
+                  <Grid item xs={9}></Grid>
+                  <Grid item xs={4}></Grid>
+                </Grid>
+              </FormikProvider>
+            </Box>
+          </>
+        );
+      case 1:
+        return (
+          <>
+            <Typography
+              sx={{ marginTop: "10px", marginLeft: "150px", width: 1000 }}
+              color="textSecondary"
+              gutterBottom
+            >
+              <h2>
+                <span>{steps[step].label}</span>
+              </h2>
+            </Typography>
+            <Box
+              sx={{
+                mx: "auto",
+                width: 1000,
+                p: 1,
+                // m: 1,
+                mt: 5,
+                ml: 17,
+                bgcolor: (theme) =>
+                  theme.palette.mode === "dark" ? "#101010" : "grey.50",
+                color: (theme) =>
+                  theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                border: "1px solid",
+                borderColor: (theme) =>
+                  theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                borderRadius: 2,
+                textAlign: "center",
+                fontSize: "0.875rem",
+                fontWeight: "700",
+              }}
+            >
+              {formValuesAcademic?.map((element, index) => (
+                <FormikProvider value={formik}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Field name="type">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel required>Education Type</InputLabel>
+                            <TextField
+                              {...field}
+                              select
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.type || ""}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            >
+                              {educationList.map((e) => (
+                                <MenuItem key={e.id} value={e.name}>
+                                  {e.name}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="institute">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>School/College/University </InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter School/College/University"
+                              fullWidth
+                              size="small"
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                              value={element.institute || ""}
+                              variant="outlined"
+                              inputProps={{ maxLength: 50 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <br />
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="passingYear">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Passing year</InputLabel>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DemoContainer components={["DatePicker"]}>
+                                <DatePicker
+                                  {...field}
+                                  views={["year"]}
+                                  onChange={(e) =>
+                                    handleChangeInputAcademicYear(index, e)
+                                  }
+                                  value={element.passingYear || ""}
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
+                          </div>
+                        )}
+                      </Field>
+                    </Grid>
+                    <br />
+                    {index ? (
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => removeFormFieldsAcademic(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null}
+                    <br />
+                    <Grid item xs={9}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={3}></Grid>
+                  </Grid>
+                </FormikProvider>
+              ))}
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsAcademic()}
+              >
+                Add
+              </Button>
+            </Box>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <Typography
+              sx={{ marginTop: "10px", marginLeft: "150px", width: 1000 }}
+              color="textSecondary"
+              gutterBottom
+            >
+              <h2>
+                <span>{steps[step].label}</span>
+              </h2>
+            </Typography>
+            <Box
+              sx={{
+                mx: "auto",
+                width: 1000,
+                p: 1,
+                // m: 1,
+                mt: 5,
+                ml: 17,
+                bgcolor: (theme) =>
+                  theme.palette.mode === "dark" ? "#101010" : "grey.50",
+                color: (theme) =>
+                  theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+                border: "1px solid",
+                borderColor: (theme) =>
+                  theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+                borderRadius: 2,
+                textAlign: "center",
+                fontSize: "0.875rem",
+                fontWeight: "700",
+              }}
+            >
+              {formValuesEmployement?.map((element, index) => (
+                <FormikProvider value={formik}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Field name="employeeCode">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Employee Code</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Employee Cpde"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              value={element.employeeCode || ""}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
+                              inputProps={{ maxLength: 50 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="companyName">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Company Name</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Company Name"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              inputProps={{ maxLength: 50 }}
+                              value={element.companyName || ""}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <br />
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="designation">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Designation</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Designation"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.designation || ""}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                    </Grid>
+                    <br />
+                    {index ? (
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => removeFormFieldsEmployement(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null}
+                    <br />
+                    <Grid item xs={9}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={3}></Grid>
+                  </Grid>
+                </FormikProvider>
+              ))}
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsEmployement()}
+              >
+                Add
+              </Button>
+            </Box>
+          </>
+        );
+      default:
+        throw new Error("Unknown step");
+    }
+  };
   useEffect(() => {
     if (id) {
       const user = users.find((_u) => _u.id == id);
@@ -260,7 +718,7 @@ const AddUser = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box
+      {/* <Box
         sx={{
           mx: "auto",
           width: 1000,
@@ -731,6 +1189,89 @@ const AddUser = () => {
             </CardContent>
           </Card>
         </TabPanel>
+      </Box> */}
+      <Box sx={{ maxWidth: 400 }}>
+        <Stepper
+          activeStep={activeStep}
+          orientation="vertical"
+          sx={{
+            mx: "auto",
+            width: 1000,
+            p: 1,
+            // m: 1,
+            mt: 5,
+            ml: 17,
+            bgcolor: (theme) =>
+              theme.palette.mode === "dark" ? "#101010" : "grey.50",
+            color: (theme) =>
+              theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+            border: "1px solid",
+            borderColor: (theme) =>
+              theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+            borderRadius: 2,
+            textAlign: "center",
+            fontSize: "0.875rem",
+            fontWeight: "700",
+          }}
+        >
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel
+                optional={
+                  index === 2 ? (
+                    <Typography variant="caption">Last step</Typography>
+                  ) : null
+                }
+              >
+                {step.label}
+              </StepLabel>
+              <StepContent>
+                <Typography>{step.description}</Typography>
+                <Box sx={{ mb: 2 }}>
+                  <div>
+                    <Button
+                      variant="contained"
+                      // onClick={handleNext}
+                      onClick={() => {
+                        formik.setTouched({
+                          firstName: true,
+                          lastName: true,
+                          email: true,
+                        });
+                        formik.validateForm().then((err) => {
+                          if (err.firstName || err.lastName || err.email) {
+                            return;
+                          } else {
+                            index === 2 ? formik.handleSubmit() : handleNext();
+                          }
+                        });
+                      }}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      {index === steps.length - 1 ? "Finish" : "Continue"}
+                    </Button>
+                    <Button
+                      disabled={index === 0}
+                      onClick={handleBack}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </Box>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+        {handleSteps(activeStep)}
+        {/* {activeStep === steps.length && (
+        <Paper square elevation={0} sx={{ p: 3 }}>
+          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+            Reset
+          </Button>
+        </Paper>
+      )} */}
       </Box>
     </div>
   );
