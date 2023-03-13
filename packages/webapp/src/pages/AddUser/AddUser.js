@@ -12,6 +12,10 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
@@ -90,12 +94,15 @@ const AddUser = () => {
         .required("First Name is  Required")
         .matches(/^[aA-zZ\s]+$/, "Enter Valid First Name"),
       lastName: Yup.string()
-      .trim()
+        .trim()
         .required("First Name is  Required")
         .matches(/^[aA-zZ\s]+$/, "Enter Valid Last Name"),
       email: Yup.string()
         .email("Invalid email format")
-        .matches(/^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/, "Invalid email format")
+        .matches(
+          /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+          "Invalid email format"
+        )
         .required("Email is Required"),
       // type: yupSelectNoneValidation('Education is Required'),
       // institute: Yup.string()
@@ -122,6 +129,8 @@ const AddUser = () => {
     onSubmit: (values) => {
       console.log(values);
       // alert(JSON.stringify(values, null, 2));
+      // formValuesAcademic.map(e => e.passingYear = JSON.stringify(e.passingYear.$y));
+      console.log(formValuesAcademic);
       let payload = {
         basicInfo: {
           firstName: values.firstName ? values.firstName : null,
@@ -187,6 +196,12 @@ const AddUser = () => {
       { type: "", institute: "", passingYear: "" },
     ]);
     console.log(formValuesAcademic);
+  };
+  let handleChangeInputAcademicYear = (i, e) => {
+    // formik.setFieldValue("passingyear", e)
+    formValuesAcademic[i].passingYear = e;
+    let newFormValues = [...formValuesAcademic];
+    setFormValuesAcademic(newFormValues);
   };
   let handleChangeInputAcademic = (i, e) => {
     let newFormValues = [...formValuesAcademic];
@@ -493,24 +508,18 @@ const AddUser = () => {
                         {({ field, meta }) => (
                           <div>
                             <InputLabel>Passing year</InputLabel>
-                            <TextField
-                              {...field}
-                              // disabled={formik.values.view ? true : false}
-                              placeholder="Enter Passing year"
-                              fullWidth
-                              size="small"
-                              variant="outlined"
-                              type="number"
-                              value={element.passingYear || ""}
-                              onChange={(e) =>
-                                handleChangeInputAcademic(index, e)
-                              }
-                              inputProps={{ maxLength: 4 }}
-                              {...{ error: meta.touched && meta.error }}
-                              helperText={
-                                meta.touched && meta.error && meta.error
-                              }
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DemoContainer components={["DatePicker"]}>
+                                <DatePicker
+                                {...field}
+                                  views={["year"]}
+                                  onChange={(e) =>
+                                    handleChangeInputAcademicYear(index, e)
+                                  }
+                                  value={element.passingYear || ""}
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
                           </div>
                         )}
                       </Field>
