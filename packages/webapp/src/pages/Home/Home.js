@@ -112,7 +112,7 @@ const Home = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.length !== 0 ? (users?.map((row, index) => (
+                {users?.length !== 0 ? (users?.map((row, index) => (
                   <TableRow
                     key={row.name}
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
