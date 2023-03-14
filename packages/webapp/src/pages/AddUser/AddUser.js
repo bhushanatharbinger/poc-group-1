@@ -326,7 +326,7 @@ const AddUser = () => {
                       <Field name="type">
                         {({ field, meta }) => (
                           <div>
-                            <InputLabel required>Education Type</InputLabel>
+                            <InputLabel>Education Type</InputLabel>
                             <TextField
                               {...field}
                               select
@@ -387,7 +387,7 @@ const AddUser = () => {
                       <Field name="passingYear">
                         {({ field, meta }) => (
                           <div>
-                            <InputLabel required>Passing Year</InputLabel>
+                            <InputLabel>Passing Year</InputLabel>
                             <Select
                               {...field}
                               size="small"

@@ -58,14 +58,14 @@ const User = () => {
         
         <div style={{ width: "100%", paddingTop: "30px",}} >
           <Box>
-            <div style={{ float: "left", width: "auto", marginLeft: "400px",  textAlign: "left",  }}>
+            <div style={{ float: "left", width: "auto", marginLeft: "370px",  textAlign: "left",  }}>
               <Card
                 variant="outlined"
                 sx={{
                   paddingTop: "10px",
                   paddingBottom: "10px",
                   marginBottom: "10px",
-                  width: "200px",
+                  width: "230px",
                   paddingLeft: "8px",
                   borderRadius: "10px"  
                   
