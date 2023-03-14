@@ -4,14 +4,16 @@ import { useParams } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
 import Card from "@mui/material/Card";
 import Divider from "@mui/material/Divider";
 import { getUser } from "../../actions/users";
-
+import Button from "@mui/material/Button";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const User = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const users = useSelector((state) => state.users);
   const [user, setUser] = useState({});
   const { id } = useParams();
@@ -31,7 +33,7 @@ const User = () => {
     <div className="container py-4">
       <AppBar
         position="absolute"
-        color="default"
+        color="primary"
         elevation={0}
         sx={{
           position: "relative",
@@ -51,43 +53,45 @@ const User = () => {
           >
             POC-GROUP-1
           </Typography>
+          <Button color="inherit" align="right" onClick={()=>navigate("/")}>Back</Button>
         </Toolbar>
       </AppBar>
       
         <hr />
         
-        <div style={{ width: "100%", paddingTop: "30px",}} >
-          <Box>
-            <div style={{ float: "left", width: "auto", marginLeft: "371px",  textAlign: "left",  }}>
+        <div style={{ width: "100%",display:"flex", paddingTop: "30px",}} >
+     
+            <div style={{ width:"20%",marginLeft:'10%',marginRight:"20px"  }}>
               <Card
                 variant="outlined"
                 sx={{
                   paddingTop: "10px",
                   paddingBottom: "10px",
                   marginBottom: "10px",
-                  width: "230px",
                   paddingLeft: "8px",
                   borderRadius: "10px"  
-                  
                 }}
               >
-                <Typography variant="h5" gutterBottom sx={{textDecoration: "underline"}}>
-                  Basic Information
+               <AccountCircleIcon style={{fontSize:'100px'}} color="primary"></AccountCircleIcon>
+                <Typography variant="h4" color={"black"}>
+                   {user?.basicInfo?.firstName} {user?.basicInfo?.lastName}
                 </Typography>
-                <Typography>
-                  <b>First Name: </b> {user?.basicInfo?.firstName}
+                <Typography variant="p">
+                 {user?.basicInfo?.email}
                 </Typography>
-                <Typography>
-                  <b>Last Name: </b> {user?.basicInfo?.lastName}
-                </Typography>
-                <Typography>
-                  <b>Email: </b> {user?.basicInfo?.email}
-                </Typography>
+                <br/>
+                <br/>
+                <Button
+                variant="outlined"
+                          aria-label="edit"
+                          onClick={() => navigate(`/edituser/${user.id}`)}
+                        >
+                          Edit
+                        </Button>
               </Card>
             </div>
-          </Box>
-          <Box>
-            <div style={{ float: "right", width: "300px", marginRight: "300px",  textAlign: "left"  }}>
+         
+            <div style={{ flex:1, marginRight:'10%',textAlign: "left"  }}>
               <Card
                 variant="outlined"
                 sx={{
@@ -98,7 +102,7 @@ const User = () => {
                   borderRadius: "10px"  
                 }}
               >
-                <Typography variant="h5" gutterBottom sx={{textDecoration: "underline"}}>
+                <Typography variant="h5" gutterBottom >
                   Employment Information
                 </Typography>
                 {user?.employementInfo?.map((element) => (
@@ -119,10 +123,6 @@ const User = () => {
                   </div>
                 ))}
               </Card>
-            </div>
-          </Box>
-          <Box>
-            <div style={{ margin: "0 auto", width: "300px",  textAlign: "left"  }}>
               <Card
                 variant="outlined"
                 sx={{
@@ -133,7 +133,7 @@ const User = () => {
                   borderRadius: "10px"  
                 }}
               >
-                <Typography variant="h5" gutterBottom sx={{textDecoration: "underline"}}>
+                <Typography variant="h5" gutterBottom >
                   Academic Information
                 </Typography>
                 {user?.academicInfo?.map((element) => (
@@ -155,8 +155,6 @@ const User = () => {
                 ))}
               </Card>
             </div>
-          </Box>
-          
         </div>
       
     </div>

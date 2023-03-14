@@ -73,7 +73,7 @@ const Home = () => {
     <div>
       <AppBar
         position="absolute"
-        color="default"
+        color="primary"
         elevation={0}
         sx={{
           position: 'relative',

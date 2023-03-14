@@ -18,10 +18,10 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import StepContent from "@mui/material/StepContent";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+// import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+// import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+// import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+// import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Button from "@mui/material/Button";
@@ -81,7 +81,7 @@ const AddUser = () => {
     formik.setFieldValue("passingYear", event.target.value);
   };
   const { id } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   let yupSelectNoneValidation = (msg) =>
     Yup.string().test("SelectNoneValidation", msg, function (val) {
       return val !== "none";
@@ -698,7 +698,7 @@ const AddUser = () => {
     <div>
       <AppBar
         position="absolute"
-        color="default"
+        color="primary"
         elevation={0}
         sx={{
           position: "relative",
@@ -718,6 +718,7 @@ const AddUser = () => {
           >
             POC-GROUP-1
           </Typography>
+          <Button color="inherit" align="right" onClick={()=>navigate("/")}>Back</Button>
         </Toolbar>
       </AppBar>
       {/* <Box
