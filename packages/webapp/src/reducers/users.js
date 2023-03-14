@@ -32,8 +32,14 @@ import {
   
       case UPDATE_USER:
         return users.map((user) => {
-          if (user.id == payload.id) {
-            const _newUser ={...user}
+          console.log('A',user)
+          console.log('B',payload)
+          if (Number(user.id) === Number(payload.id)) {
+            let _newUser ={}
+            _newUser.id = Number(payload.id)
+            _newUser.email = payload.email
+            _newUser.firstName = payload.firstName
+            _newUser.lastName = payload.lastName
             _newUser.basicInfo = payload.basicInfo
             _newUser.employementInfo = payload.employementInfo
             _newUser.academicInfo = payload.academicInfo
