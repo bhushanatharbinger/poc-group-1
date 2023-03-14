@@ -69,7 +69,6 @@ const AddUser = () => {
   ]);
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
-    { id: "none", name: "Select Education Type" },
     { id: 1, name: "Under Graduate" },
     { id: 2, name: "Post Graduate" },
     { id: 3, name: "Others" },
