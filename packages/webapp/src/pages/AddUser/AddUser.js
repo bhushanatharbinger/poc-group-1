@@ -12,6 +12,7 @@ import {
   Paper,
   Toolbar,
   Typography,
+  Select,
 } from "@mui/material";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -75,6 +76,9 @@ const AddUser = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const handleYearChange = (event) => {
+    formik.setFieldValue("passingYear", event.target.value);
+  };
   const { id } = useParams();
   const navigate = useNavigate();
   let yupSelectNoneValidation = (msg) =>
@@ -112,7 +116,7 @@ const AddUser = () => {
       email: "",
       type: "",
       institute: "",
-      passingYear: "",
+      passingYear: new Date().getFullYear(),
       employeeCode: "",
       companyName: "",
       designation: "",
@@ -195,7 +199,12 @@ const AddUser = () => {
         return (
           <>
             <Typography
-              sx={{ marginTop: "10px", marginLeft: "150px", width: 1000 }}
+              sx={{
+                marginTop: "10px",
+                marginBottom: "15px",
+                marginLeft: "100px",
+                width: 700,
+              }}
               color="textSecondary"
               gutterBottom
             >
@@ -203,27 +212,7 @@ const AddUser = () => {
                 <span>{steps[step].label}</span>
               </h2>
             </Typography>
-            <Box
-              sx={{
-                mx: "auto",
-                width: 1000,
-                p: 1,
-                // m: 1,
-                mt: 5,
-                ml: 17,
-                bgcolor: (theme) =>
-                  theme.palette.mode === "dark" ? "#101010" : "grey.50",
-                color: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.300" : "grey.800",
-                border: "1px solid",
-                borderColor: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.800" : "grey.300",
-                borderRadius: 2,
-                textAlign: "center",
-                fontSize: "0.875rem",
-                fontWeight: "700",
-              }}
-            >
+            <Box>
               <FormikProvider value={formik}>
                 <Grid container>
                   <Grid item xs={3}>
@@ -313,7 +302,12 @@ const AddUser = () => {
         return (
           <>
             <Typography
-              sx={{ marginTop: "10px", marginLeft: "150px", width: 1000 }}
+              sx={{
+                marginTop: "10px",
+                marginBottom: "15px",
+                marginLeft: "100px",
+                width: 700,
+              }}
               color="textSecondary"
               gutterBottom
             >
@@ -321,27 +315,7 @@ const AddUser = () => {
                 <span>{steps[step].label}</span>
               </h2>
             </Typography>
-            <Box
-              sx={{
-                mx: "auto",
-                width: 1000,
-                p: 1,
-                // m: 1,
-                mt: 5,
-                ml: 17,
-                bgcolor: (theme) =>
-                  theme.palette.mode === "dark" ? "#101010" : "grey.50",
-                color: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.300" : "grey.800",
-                border: "1px solid",
-                borderColor: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.800" : "grey.300",
-                borderRadius: 2,
-                textAlign: "center",
-                fontSize: "0.875rem",
-                fontWeight: "700",
-              }}
-            >
+            <Box>
               {formValuesAcademic?.map((element, index) => (
                 <FormikProvider value={formik}>
                   <Grid container>
@@ -410,22 +384,62 @@ const AddUser = () => {
                       <Field name="passingYear">
                         {({ field, meta }) => (
                           <div>
-                            <InputLabel>Passing year</InputLabel>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                              <DemoContainer components={["DatePicker"]}>
-                                <DatePicker
-                                  {...field}
-                                  views={["year"]}
-                                  onChange={(e) =>
-                                    handleChangeInputAcademicYear(index, e)
-                                  }
-                                  value={element.passingYear || ""}
-                                />
-                              </DemoContainer>
-                            </LocalizationProvider>
+                            <InputLabel required>Passing Year</InputLabel>
+                            <Select
+                              {...field}
+                              size="small"
+                              fullWidth
+                              value={element.passingYear || ""}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                            >
+                              {Array.from({ length: 100 }).map((_, index) => {
+                                const year = formik.values.passingYear - index;
+                                const isFutureYear = year > formik.values.passingYear;
+                                return (
+                                  <MenuItem
+                                    key={year}
+                                    value={year}
+                                    disabled={isFutureYear}
+                                  >
+                                    {year}
+                                  </MenuItem>
+                                );
+                              })}
+                            </Select>
                           </div>
                         )}
                       </Field>
+
+                      {/* <Field name="passingYear">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel required>Passing Year</InputLabel>
+                            <TextField
+                              {...field}
+                              select
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.passingYear || ""}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            >
+                              {educationList.map((e) => (
+                                <MenuItem key={e.id} value={e.name}>
+                                  {e.name}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
+                        )}
+                      </Field> */}
                     </Grid>
                     <br />
                     {index ? (
@@ -465,7 +479,12 @@ const AddUser = () => {
         return (
           <>
             <Typography
-              sx={{ marginTop: "10px", marginLeft: "150px", width: 1000 }}
+              sx={{
+                marginTop: "10px",
+                marginBottom: "15px",
+                marginLeft: "100px",
+                width: 700,
+              }}
               color="textSecondary"
               gutterBottom
             >
@@ -473,27 +492,7 @@ const AddUser = () => {
                 <span>{steps[step].label}</span>
               </h2>
             </Typography>
-            <Box
-              sx={{
-                mx: "auto",
-                width: 1000,
-                p: 1,
-                // m: 1,
-                mt: 5,
-                ml: 17,
-                bgcolor: (theme) =>
-                  theme.palette.mode === "dark" ? "#101010" : "grey.50",
-                color: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.300" : "grey.800",
-                border: "1px solid",
-                borderColor: (theme) =>
-                  theme.palette.mode === "dark" ? "grey.800" : "grey.300",
-                borderRadius: 2,
-                textAlign: "center",
-                fontSize: "0.875rem",
-                fontWeight: "700",
-              }}
-            >
+            <Box>
               {formValuesEmployement?.map((element, index) => (
                 <FormikProvider value={formik}>
                   <Grid container>
@@ -1226,7 +1225,7 @@ const AddUser = () => {
                 {step.label}
               </StepLabel>
               <StepContent>
-                <Typography>{step.description}</Typography>
+                <Typography>{handleSteps(activeStep)}</Typography>
                 <Box sx={{ mb: 2 }}>
                   <div>
                     <Button
@@ -1263,7 +1262,7 @@ const AddUser = () => {
             </Step>
           ))}
         </Stepper>
-        {handleSteps(activeStep)}
+
         {/* {activeStep === steps.length && (
         <Paper square elevation={0} sx={{ p: 3 }}>
           <Typography>All steps completed - you&apos;re finished</Typography>
