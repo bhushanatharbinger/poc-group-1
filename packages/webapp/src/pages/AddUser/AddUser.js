@@ -1,7 +1,3 @@
-
-import Button from "@mui/material/Button";
-import Alert from '@mui/material/Alert';
-import PropTypes from "prop-types";
 import {
   AppBar,
   Box,
@@ -13,17 +9,30 @@ import {
   Tab,
   Tabs,
   TextField,
+  Paper,
   Toolbar,
   Typography,
+  Select,
 } from "@mui/material";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import StepContent from "@mui/material/StepContent";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Button from "@mui/material/Button";
 import { Field, FormikProvider, useFormik } from "formik";
+import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { createUser, getUser, updateUser } from "../../actions/users";
+const _initYear = new Date().getFullYear()
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -58,7 +67,6 @@ const AddUser = () => {
   const [formValuesEmployement, setFormValuesEmployement] = useState([
     { employeeCode: "", companyName: "", designation: "" },
   ]);
-  const [error, setError] = React.useState(false)
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
     { id: "none", name: "Select Education Type" },
@@ -69,12 +77,39 @@ const AddUser = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const { id } = useParams()
+  const handleYearChange = (event) => {
+    formik.setFieldValue("passingYear", event.target.value);
+  };
+  const { id } = useParams();
   const navigate = useNavigate();
   let yupSelectNoneValidation = (msg) =>
     Yup.string().test("SelectNoneValidation", msg, function (val) {
       return val !== "none";
     });
+  const [activeStep, setActiveStep] = React.useState(0);
+
+  const handleNext = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+  };
+
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
+  };
+
+  const handleReset = () => {
+    setActiveStep(0);
+  };
+  const steps = [
+    {
+      label: "Basic Information",
+    },
+    {
+      label: "Academic Information",
+    },
+    {
+      label: "Employeement Information",
+    },
+  ];
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -82,22 +117,26 @@ const AddUser = () => {
       email: "",
       type: "",
       institute: "",
-      passingYear: "",
+      passingYear: new Date().getFullYear(),
       employeeCode: "",
       companyName: "",
       designation: "",
     },
     validationSchema: Yup.object({
       firstName: Yup.string()
-        .min(4, "Must be 4 charecters or more")
-        .max(20, "Must be 20 characters or less")
-        .required("First Name is  Required"),
+        .trim()
+        .required("First Name is  Required")
+        .matches(/^[aA-zZ\s]+$/, "Enter Valid First Name"),
       lastName: Yup.string()
-        .min(4, "Must be 4 charecters or more")
-        .max(20, "Must be 20 characters or less")
-        .required("Last Name is Required"),
+        .trim()
+        .required("First Name is  Required")
+        .matches(/^[aA-zZ\s]+$/, "Enter Valid Last Name"),
       email: Yup.string()
         .email("Invalid email format")
+        .matches(
+          /^[a-zA-Z0-9]+@(?:[a-zA-Z0-9]+\.)+[A-Za-z]+$/,
+          "Invalid email format"
+        )
         .required("Email is Required"),
       // type: yupSelectNoneValidation('Education is Required'),
       // institute: Yup.string()
@@ -124,6 +163,8 @@ const AddUser = () => {
     onSubmit: (values) => {
       console.log(values);
       // alert(JSON.stringify(values, null, 2));
+      // formValuesAcademic.map(e => e.passingYear = JSON.stringify(e.passingYear.$y));
+      console.log(formValuesAcademic);
       let payload = {
         basicInfo: {
           firstName: values.firstName ? values.firstName : null,
@@ -140,13 +181,8 @@ const AddUser = () => {
     },
   });
   const submitAddData = async (e) => {
-    dispatch(createUser(e)).then(() => {
-      navigate("/");
-    }).catch(err => {
-      setError(true)
-      console.log('err', err?.response?.data?.message);
-    });
-
+    dispatch(createUser(e));
+    navigate("/");
   };
   const submitUpdateData = async (e) => {
     dispatch(updateUser(id, e));
@@ -158,6 +194,432 @@ const AddUser = () => {
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
+  const handleSteps = (step) => {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            <Typography
+              sx={{
+                marginTop: "10px",
+                marginBottom: "15px",
+                marginLeft: "100px",
+                width: 700,
+              }}
+              color="textSecondary"
+              gutterBottom
+            >
+              <h2>
+                <span>{steps[step].label}</span>
+              </h2>
+            </Typography>
+            <Box>
+              <FormikProvider value={formik}>
+                <Grid container>
+                  <Grid item xs={3}>
+                    <Field name="firstName">
+                      {({ field, meta }) => (
+                        <div>
+                          <InputLabel required>First Name</InputLabel>
+                          <TextField
+                            {...field}
+                            // disabled={formik.values.view ? true : false}
+                            placeholder="Enter First Name"
+                            required
+                            fullWidth
+                            disabled={id ? true : false}
+                            size="small"
+                            variant="outlined"
+                            inputProps={{ maxLength: 50 }}
+                            {...{ error: meta.touched && meta.error }}
+                            helperText={
+                              meta.touched && meta.error && meta.error
+                            }
+                          />
+                        </div>
+                      )}
+                    </Field>
+                    <br />
+                  </Grid>
+                  <Grid item xs={1}></Grid>
+                  <Grid item xs={3}>
+                    <Field name="lastName">
+                      {({ field, meta }) => (
+                        <div>
+                          <InputLabel required>Last Name</InputLabel>
+                          <TextField
+                            {...field}
+                            // disabled={formik.values.view ? true : false}
+                            placeholder="Enter Last Name"
+                            required
+                            fullWidth
+                            disabled={id ? true : false}
+                            size="small"
+                            variant="outlined"
+                            inputProps={{ maxLength: 50 }}
+                            {...{ error: meta.touched && meta.error }}
+                            helperText={
+                              meta.touched && meta.error && meta.error
+                            }
+                          />
+                        </div>
+                      )}
+                    </Field>
+                    <br />
+                  </Grid>
+                  <br />
+                  <Grid item xs={1}></Grid>
+                  <Grid item xs={3}>
+                    <Field name="email">
+                      {({ field, meta }) => (
+                        <div>
+                          <InputLabel required>Email</InputLabel>
+                          <TextField
+                            {...field}
+                            // disabled={formik.values.view ? true : false}
+                            placeholder="Enter Email"
+                            required
+                            variant="outlined"
+                            size="small"
+                            fullWidth
+                            inputProps={{ maxLength: 50 }}
+                            {...{ error: meta.touched && meta.error }}
+                            helperText={
+                              meta.touched && meta.error && meta.error
+                            }
+                          />
+                        </div>
+                      )}
+                    </Field>
+                  </Grid>
+                  <br />
+                  <br />
+                  <Grid item xs={9}></Grid>
+                  <Grid item xs={4}></Grid>
+                </Grid>
+              </FormikProvider>
+            </Box>
+          </>
+        );
+      case 1:
+        return (
+          <>
+            <Typography
+              sx={{
+                marginTop: "10px",
+                marginBottom: "15px",
+                marginLeft: "100px",
+                width: 700,
+              }}
+              color="textSecondary"
+              gutterBottom
+            >
+              <h2>
+                <span>{steps[step].label}</span>
+              </h2>
+            </Typography>
+            <Box>
+              {formValuesAcademic?.map((element, index) => (
+                <FormikProvider value={formik}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Field name="type">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel required>Education Type</InputLabel>
+                            <TextField
+                              {...field}
+                              select
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.type || ""}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            >
+                              {educationList.map((e) => (
+                                <MenuItem key={e.id} value={e.name}>
+                                  {e.name}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="institute">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>School/College/University </InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter School/College/University"
+                              fullWidth
+                              size="small"
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                              value={element.institute || ""}
+                              variant="outlined"
+                              inputProps={{ maxLength: 50 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <br />
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="passingYear">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel required>Passing Year</InputLabel>
+                            <Select
+                              {...field}
+                              size="small"
+                              fullWidth
+                              value={element.passingYear || _initYear}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                            >
+                              {Array.from({ length: 100 }).map((_, index) => {
+                                const year = _initYear - index;
+                                // const isFutureYear = year > formik.values.passingYear;
+                                return (
+                                  <MenuItem
+                                    key={year}
+                                    value={year}
+                                    // disabled={isFutureYear}
+                                  >
+                                    {year}
+                                  </MenuItem>
+                                );
+                              })}
+                            </Select>
+                          </div>
+                        )}
+                      </Field>
+
+                      {/* <Field name="passingYear">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel required>Passing Year</InputLabel>
+                            <TextField
+                              {...field}
+                              select
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.passingYear || ""}
+                              onChange={(e) =>
+                                handleChangeInputAcademic(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            >
+                              {educationList.map((e) => (
+                                <MenuItem key={e.id} value={e.name}>
+                                  {e.name}
+                                </MenuItem>
+                              ))}
+                            </TextField>
+                          </div>
+                        )}
+                      </Field> */}
+                    </Grid>
+                    <br />
+                    {index ? (
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => removeFormFieldsAcademic(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null}
+                    <br />
+                    <Grid item xs={9}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={3}></Grid>
+                  </Grid>
+                </FormikProvider>
+              ))}
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsAcademic()}
+              >
+                Add
+              </Button>
+            </Box>
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <Typography
+              sx={{
+                marginTop: "10px",
+                marginBottom: "15px",
+                marginLeft: "100px",
+                width: 700,
+              }}
+              color="textSecondary"
+              gutterBottom
+            >
+              <h2>
+                <span>{steps[step].label}</span>
+              </h2>
+            </Typography>
+            <Box>
+              {formValuesEmployement?.map((element, index) => (
+                <FormikProvider value={formik}>
+                  <Grid container>
+                    <Grid item xs={3}>
+                      <Field name="employeeCode">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Employee Code</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Employee Cpde"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              value={element.employeeCode || ""}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
+                              inputProps={{ maxLength: 50 }}
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="companyName">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Company Name</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Company Name"
+                              fullWidth
+                              size="small"
+                              variant="outlined"
+                              inputProps={{ maxLength: 50 }}
+                              value={element.companyName || ""}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                      <br />
+                    </Grid>
+                    <br />
+                    <Grid item xs={1}></Grid>
+                    <Grid item xs={3}>
+                      <Field name="designation">
+                        {({ field, meta }) => (
+                          <div>
+                            <InputLabel>Designation</InputLabel>
+                            <TextField
+                              {...field}
+                              // disabled={formik.values.view ? true : false}
+                              placeholder="Enter Designation"
+                              variant="outlined"
+                              size="small"
+                              fullWidth
+                              inputProps={{ maxLength: 50 }}
+                              value={element.designation || ""}
+                              onChange={(e) =>
+                                handleChangeInputEmployement(index, e)
+                              }
+                              {...{ error: meta.touched && meta.error }}
+                              helperText={
+                                meta.touched && meta.error && meta.error
+                              }
+                            />
+                          </div>
+                        )}
+                      </Field>
+                    </Grid>
+                    <br />
+                    {index ? (
+                      <IconButton
+                        aria-label="delete"
+                        color="error"
+                        onClick={() => removeFormFieldsEmployement(index)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    ) : null}
+                    <br />
+                    <Grid item xs={9}></Grid>
+                    <Grid item xs={4}></Grid>
+                    <Grid item xs={3}></Grid>
+                  </Grid>
+                </FormikProvider>
+              ))}
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsEmployement()}
+              >
+                Add
+              </Button>
+            </Box>
+          </>
+        );
+      default:
+        throw new Error("Unknown step");
+    }
+  };
   useEffect(() => {
     if (id) {
       const user = users.find((_u) => _u.id == id);
@@ -167,7 +629,7 @@ const AddUser = () => {
       formik.setFieldValue("email", user?.basicInfo?.email);
       formik.setFieldValue("type", user?.academicInfo?.[0].type);
       formik.setFieldValue("institute", user?.academicInfo?.[0].institute);
-      formik.setFieldValue("passingYear", user?.academicInfo?.[0].passingYear);
+      formik.setFieldValue("passingYear", parseInt(user?.academicInfo?.[0].passingYear));
       formik.setFieldValue(
         "employeeCode",
         user?.employementInfo?.[0].employeeCode
@@ -194,6 +656,12 @@ const AddUser = () => {
       { type: "", institute: "", passingYear: "" },
     ]);
     console.log(formValuesAcademic);
+  };
+  let handleChangeInputAcademicYear = (i, e) => {
+    // formik.setFieldValue("passingyear", e)
+    formValuesAcademic[i].passingYear = e;
+    let newFormValues = [...formValuesAcademic];
+    setFormValuesAcademic(newFormValues);
   };
   let handleChangeInputAcademic = (i, e) => {
     let newFormValues = [...formValuesAcademic];
@@ -252,7 +720,7 @@ const AddUser = () => {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Box
+      {/* <Box
         sx={{
           mx: "auto",
           width: 1000,
@@ -280,8 +748,30 @@ const AddUser = () => {
             aria-label="basic tabs example"
           >
             <Tab label="Basic Information" {...a11yProps(0)} />
-            <Tab label="Academic Information" {...a11yProps(1)} />
-            <Tab label="Employment Information" {...a11yProps(2)} />
+            <Tab
+              label="Academic Information"
+              {...a11yProps(1)}
+              disabled={
+                formik?.values?.firstName === "" ||
+                formik?.values?.lastName === "" ||
+                formik?.values?.email === "" ||
+                formik.errors.email === "Invalid email format"
+                  ? true
+                  : false
+              }
+            />
+            <Tab
+              label="Employment Information"
+              {...a11yProps(2)}
+              disabled={
+                formik?.values?.firstName === "" ||
+                formik?.values?.lastName === "" ||
+                formik?.values?.email === "" ||
+                formik.errors.email === "Invalid email format"
+                  ? true
+                  : false
+              }
+            />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
@@ -478,24 +968,18 @@ const AddUser = () => {
                         {({ field, meta }) => (
                           <div>
                             <InputLabel>Passing year</InputLabel>
-                            <TextField
-                              {...field}
-                              // disabled={formik.values.view ? true : false}
-                              placeholder="Enter Passing year"
-                              fullWidth
-                              size="small"
-                              variant="outlined"
-                              type="number"
-                              value={element.passingYear || ""}
-                              onChange={(e) =>
-                                handleChangeInputAcademic(index, e)
-                              }
-                              inputProps={{ maxLength: 4 }}
-                              {...{ error: meta.touched && meta.error }}
-                              helperText={
-                                meta.touched && meta.error && meta.error
-                              }
-                            />
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                              <DemoContainer components={["DatePicker"]}>
+                                <DatePicker
+                                {...field}
+                                  views={["year"]}
+                                  onChange={(e) =>
+                                    handleChangeInputAcademicYear(index, e)
+                                  }
+                                  value={element.passingYear || ""}
+                                />
+                              </DemoContainer>
+                            </LocalizationProvider>
                           </div>
                         )}
                       </Field>
@@ -513,33 +997,46 @@ const AddUser = () => {
                     <br />
                     <Grid item xs={9}></Grid>
                     <Grid item xs={4}></Grid>
-
+                    <Grid item xs={3}>
+                      <div className={`col-2`}>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            marginRight: "10px",
+                          }}
+                          onClick={() => {
+                            setValue(0);
+                          }}
+                        >
+                          Previous
+                        </Button>
+                        <Button
+                          variant="contained"
+                          onClick={() => {
+                            setValue(2);
+                          }}
+                        >
+                          Next
+                        </Button>
+                      </div>
+                    </Grid>
                   </Grid>
                 </FormikProvider>
               ))}
-              <Grid item xs={3}>
-                <div className={`col-2`}>
-                  <Button
-                    sx={{
-                      marginRight: "10px",
-                    }}
-                    variant="contained"
-                    color="success"
-                    onClick={() => addFormFieldsAcademic()}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      setValue(2);
-                    }}
-                  >
-                    Next
-                  </Button>
-                </div>
-              </Grid>
-
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsAcademic()}
+              >
+                Add
+              </Button>
             </CardContent>
           </Card>
         </TabPanel>
@@ -650,36 +1147,154 @@ const AddUser = () => {
                     <br />
                     <Grid item xs={9}></Grid>
                     <Grid item xs={4}></Grid>
+                    <Grid item xs={3}>
+                      <div className={`col-2`}>
+                        <Button
+                          variant="contained"
+                          sx={{
+                            marginRight: "10px",
+                          }}
+                          onClick={() => {
+                            setValue(1);
+                          }}
+                        >
+                          Previous
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={() => {
+                            formik.handleSubmit();
+                          }}
+                        >
+                          {id ? "Update" : "Save"}
+                        </Button>
+                      </div>
+                    </Grid>
                   </Grid>
                 </FormikProvider>
               ))}
-              <Grid item xs={3}>
-                <div className={`col-2`}>
-                  <Button
-                    sx={{
-                      marginRight: "10px",
-                    }}
-                    variant="contained"
-                    color="success"
-                    onClick={() => addFormFieldsEmployement()}
-                  >
-                    Add
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() => {
-                      formik.handleSubmit();
-                    }}
-                  >
-                    {id ? "Update" : "Save"}
-                  </Button>
-                </div>
-              </Grid>
+              <Button
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  height: "37px",
+                  marginLeft: "10px",
+                  marginTop: "24px",
+                }}
+                variant="contained"
+                color="success"
+                onClick={() => addFormFieldsEmployement()}
+              >
+                Add
+              </Button>
             </CardContent>
           </Card>
         </TabPanel>
-        {error ? <Alert severity="error">Email Already Exist!</Alert> : <></>}
+      </Box> */}
+      <Box sx={{ maxWidth: 400 }}>
+        <Stepper
+          activeStep={activeStep}
+          orientation="vertical"
+          sx={{
+            mx: "auto",
+            width: 1000,
+            p: 1,
+            // m: 1,
+            mt: 5,
+            ml: 17,
+            bgcolor: (theme) =>
+              theme.palette.mode === "dark" ? "#101010" : "grey.50",
+            color: (theme) =>
+              theme.palette.mode === "dark" ? "grey.300" : "grey.800",
+            border: "1px solid",
+            borderColor: (theme) =>
+              theme.palette.mode === "dark" ? "grey.800" : "grey.300",
+            borderRadius: 2,
+            textAlign: "center",
+            fontSize: "0.875rem",
+            fontWeight: "700",
+          }}
+        >
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel
+                optional={
+                  index === 2 ? (
+                    <Typography variant="caption">Last step</Typography>
+                  ) : null
+                }
+              >
+                {step.label}
+              </StepLabel>
+              <StepContent>
+                <Typography>{handleSteps(activeStep)}</Typography>
+                <Box sx={{ mb: 2 }}>
+                  <div>
+                    {index !== steps.length - 1 && <Button
+                      variant="contained"
+                      // onClick={handleNext}
+                      onClick={() => {
+                        formik.setTouched({
+                          firstName: true,
+                          lastName: true,
+                          email: true,
+                        });
+                        formik.validateForm().then((err) => {
+                          if (err.firstName || err.lastName || err.email) {
+                            return;
+                          } else {
+                            index === 2 ? formik.handleSubmit() : handleNext();
+                          }
+                        });
+                      }}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      {"Continue"}
+                    </Button>}
+                    <Button
+                      variant="contained"
+                      // onClick={handleNext}
+                      onClick={() => {
+                        formik.setTouched({
+                          firstName: true,
+                          lastName: true,
+                          email: true,
+                        });
+                        formik.validateForm().then((err) => {
+                          if (err.firstName || err.lastName || err.email) {
+                            return;
+                          } else {
+                            formik.handleSubmit()
+                          }
+                        });
+                      }}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      {"Save"}
+                    </Button>
+                    <Button
+                      disabled={index === 0}
+                      onClick={handleBack}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </Box>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+
+        {/* {activeStep === steps.length && (
+        <Paper square elevation={0} sx={{ p: 3 }}>
+          <Typography>All steps completed - you&apos;re finished</Typography>
+          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+            Reset
+          </Button>
+        </Paper>
+      )} */}
       </Box>
     </div>
   );

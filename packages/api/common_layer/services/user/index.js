@@ -44,7 +44,7 @@ user.getUserDetails = async function (userId) {
  * @returns returns user id of newely created record
  */
 user.addUser = async function (basicInfo, academicInfo, employementInfo) {
-  const existingUser = await db.user.findAll({ where: { email: basicInfo.email } })
+  const existingUser = await db.user.findAll({ where: { email: basicInfo.email,deleted:false } })
   if (existingUser.length > 0) {
     return {
       error: 'Email Already Exist!'
