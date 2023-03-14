@@ -227,6 +227,7 @@ const AddUser = () => {
                             placeholder="Enter First Name"
                             required
                             fullWidth
+                            disabled={id ? true : false}
                             size="small"
                             variant="outlined"
                             inputProps={{ maxLength: 50 }}
@@ -252,6 +253,7 @@ const AddUser = () => {
                             placeholder="Enter Last Name"
                             required
                             fullWidth
+                            disabled={id ? true : false}
                             size="small"
                             variant="outlined"
                             inputProps={{ maxLength: 50 }}
