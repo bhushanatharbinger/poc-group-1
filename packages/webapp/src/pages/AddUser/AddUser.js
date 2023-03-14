@@ -69,7 +69,6 @@ const AddUser = () => {
   ]);
   const [value, setValue] = React.useState(0);
   let [educationList] = useState([
-    { id: "none", name: "Select Education Type" },
     { id: 1, name: "Under Graduate" },
     { id: 2, name: "Post Graduate" },
     { id: 3, name: "Others" },
@@ -81,7 +80,7 @@ const AddUser = () => {
     formik.setFieldValue("passingYear", event.target.value);
   };
   const { id } = useParams();
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   let yupSelectNoneValidation = (msg) =>
     Yup.string().test("SelectNoneValidation", msg, function (val) {
       return val !== "none";
@@ -326,7 +325,7 @@ const AddUser = () => {
                       <Field name="type">
                         {({ field, meta }) => (
                           <div>
-                            <InputLabel required>Education Type</InputLabel>
+                            <InputLabel>Education Type</InputLabel>
                             <TextField
                               {...field}
                               select
@@ -387,7 +386,7 @@ const AddUser = () => {
                       <Field name="passingYear">
                         {({ field, meta }) => (
                           <div>
-                            <InputLabel required>Passing Year</InputLabel>
+                            <InputLabel>Passing Year</InputLabel>
                             <Select
                               {...field}
                               size="small"
