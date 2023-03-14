@@ -50,24 +50,8 @@ const Home = () => {
     setOpen(false)
   }
   useEffect(() => {
-    if(!users || users?.length === 0){
       dispatch(getAllUsers());
-    }
   }, []);
-
-  // const deleteUser = async (id) => {
-  //   await axios.delete(
-  //     `https://60decafeabbdd9001722d05c.mockapi.io/users/${id}`
-  //   );
-  //   loadUsers();
-  // };
-
-  // const loadUsers = async () => {
-  //   const result = await axios.get(
-  //     `https://60decafeabbdd9001722d05c.mockapi.io/users`
-  //   );
-  //   setUser(result.data);
-  // };
 
   return (
     <div>

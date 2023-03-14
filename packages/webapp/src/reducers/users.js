@@ -19,10 +19,22 @@ import {
         return payload;
       
       case RETRIEVE_USER:
+        if(!users.length){
+          let _newUser ={}
+            _newUser.id = Number(payload?.basicInfo.id)
+            _newUser.email = payload.basicInfo.email
+            _newUser.firstName = payload.basicInfo.firstName
+            _newUser.lastName = payload.basicInfo.lastName
+            _newUser.basicInfo = payload.basicInfo
+            _newUser.employementInfo = payload.employementInfo
+            _newUser.academicInfo = payload.academicInfo
+          return[_newUser]
+        }
         return users.map((user) => {
           if (user.id === payload?.basicInfo.id) {
             return {
               ...user,
+              ...payload.basicInfo,
               ...payload,
             };
           } else {
@@ -31,6 +43,8 @@ import {
         });;
   
       case UPDATE_USER:
+        
+       
         return users.map((user) => {
           console.log('A',user)
           console.log('B',payload)

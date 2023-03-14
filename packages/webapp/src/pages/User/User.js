@@ -69,7 +69,9 @@ const User = () => {
                   paddingBottom: "10px",
                   marginBottom: "10px",
                   paddingLeft: "8px",
-                  borderRadius: "10px"  
+                  borderRadius: "10px" ,
+                  bgcolor: (theme) =>
+              theme.palette.mode === "dark" ? "#101010" : "grey.50",
                 }}
               >
                <AccountCircleIcon style={{fontSize:'100px'}} color="primary"></AccountCircleIcon>
@@ -99,7 +101,9 @@ const User = () => {
                   paddingBottom: "10px",
                   marginBottom: "10px",
                   paddingLeft: "10px",
-                  borderRadius: "10px"  
+                  borderRadius: "10px",
+                  bgcolor: (theme) =>
+                  theme.palette.mode === "dark" ? "#101010" : "grey.50",  
                 }}
               >
                 <Typography variant="h5" gutterBottom >
@@ -130,7 +134,9 @@ const User = () => {
                   paddingBottom: "10px",
                   marginBottom: "10px",
                   paddingLeft: "10px",
-                  borderRadius: "10px"  
+                  borderRadius: "10px",
+                  bgcolor: (theme) =>
+                  theme.palette.mode === "dark" ? "#101010" : "grey.50",  
                 }}
               >
                 <Typography variant="h5" gutterBottom >
