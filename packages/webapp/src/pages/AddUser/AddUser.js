@@ -32,6 +32,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { createUser, getUser, updateUser } from "../../actions/users";
+const _initYear = new Date().getFullYear()
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -389,19 +390,19 @@ const AddUser = () => {
                               {...field}
                               size="small"
                               fullWidth
-                              value={element.passingYear || ""}
+                              value={element.passingYear || _initYear}
                               onChange={(e) =>
                                 handleChangeInputAcademic(index, e)
                               }
                             >
                               {Array.from({ length: 100 }).map((_, index) => {
-                                const year = formik.values.passingYear - index;
-                                const isFutureYear = year > formik.values.passingYear;
+                                const year = _initYear - index;
+                                // const isFutureYear = year > formik.values.passingYear;
                                 return (
                                   <MenuItem
                                     key={year}
                                     value={year}
-                                    disabled={isFutureYear}
+                                    // disabled={isFutureYear}
                                   >
                                     {year}
                                   </MenuItem>
@@ -626,7 +627,7 @@ const AddUser = () => {
       formik.setFieldValue("email", user?.basicInfo?.email);
       formik.setFieldValue("type", user?.academicInfo?.[0].type);
       formik.setFieldValue("institute", user?.academicInfo?.[0].institute);
-      formik.setFieldValue("passingYear", user?.academicInfo?.[0].passingYear);
+      formik.setFieldValue("passingYear", parseInt(user?.academicInfo?.[0].passingYear));
       formik.setFieldValue(
         "employeeCode",
         user?.employementInfo?.[0].employeeCode
@@ -1228,7 +1229,7 @@ const AddUser = () => {
                 <Typography>{handleSteps(activeStep)}</Typography>
                 <Box sx={{ mb: 2 }}>
                   <div>
-                    <Button
+                    {index !== steps.length - 1 && <Button
                       variant="contained"
                       // onClick={handleNext}
                       onClick={() => {
@@ -1247,7 +1248,28 @@ const AddUser = () => {
                       }}
                       sx={{ mt: 1, mr: 1 }}
                     >
-                      {index === steps.length - 1 ? "Finish" : "Continue"}
+                      {"Continue"}
+                    </Button>}
+                    <Button
+                      variant="contained"
+                      // onClick={handleNext}
+                      onClick={() => {
+                        formik.setTouched({
+                          firstName: true,
+                          lastName: true,
+                          email: true,
+                        });
+                        formik.validateForm().then((err) => {
+                          if (err.firstName || err.lastName || err.email) {
+                            return;
+                          } else {
+                            formik.handleSubmit()
+                          }
+                        });
+                      }}
+                      sx={{ mt: 1, mr: 1 }}
+                    >
+                      {"Save"}
                     </Button>
                     <Button
                       disabled={index === 0}
