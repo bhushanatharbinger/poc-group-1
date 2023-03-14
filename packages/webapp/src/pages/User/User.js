@@ -58,7 +58,7 @@ const User = () => {
         
         <div style={{ width: "100%", paddingTop: "30px",}} >
           <Box>
-            <div style={{ float: "left", width: "auto", marginLeft: "370px",  textAlign: "left",  }}>
+            <div style={{ float: "left", width: "auto", marginLeft: "371px",  textAlign: "left",  }}>
               <Card
                 variant="outlined"
                 sx={{
