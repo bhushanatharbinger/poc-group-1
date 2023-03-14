@@ -698,7 +698,7 @@ const AddUser = () => {
     <div>
       <AppBar
         position="absolute"
-        color="default"
+        color="primary"
         elevation={0}
         sx={{
           position: "relative",
@@ -718,6 +718,7 @@ const AddUser = () => {
           >
             POC-GROUP-1
           </Typography>
+          <Button color="inherit" align="right" onClick={()=>navigate("/")}>Back</Button>
         </Toolbar>
       </AppBar>
       {/* <Box
