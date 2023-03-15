@@ -2,8 +2,18 @@ import AddUser from "../AddUser";
 import { BrowserRouter } from "react-router-dom";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
+import Button from "@mui/material/Button";
 import "@testing-library/jest-dom";
 import store from "../../../store";
+
+describe('<Button />', () => {
+    it('should call onClick prop when clicked', () => {
+      const onClick = jest.fn();
+      const { getByRole } = render(<Button onClick={onClick}>Click me!</Button>);
+      fireEvent.click(getByRole('button'));
+      expect(onClick).toHaveBeenCalled();
+    });
+  });
 
 describe("Test the Login Component", () => {
   test("render the Home on the screen", async () => {
