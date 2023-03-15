@@ -19,7 +19,7 @@ import {
         return payload;
       
       case RETRIEVE_USER:
-        if(!users.length){
+        if(!users?.length){
           let _newUser ={}
             _newUser.id = Number(payload?.basicInfo.id)
             _newUser.email = payload.basicInfo.email
